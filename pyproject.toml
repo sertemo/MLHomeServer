@@ -11,6 +11,8 @@ python = "^3.10"
 fastapi = "^0.111.0"
 scikit-learn = "^1.4.2"
 numpy = "^1.26.4"
+pandas = "^2.2.2"
+toml = "^0.10.2"
 
 
 [build-system]

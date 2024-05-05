@@ -10,13 +10,17 @@ Los pasos que he tenido que seguir para conseguirlo se describen a continuación
 
 Crear una pequeña API usando FastAPI para dar respuesta a las peticiones.
 
-La API usa modelos entrenados y serializados con pickle para hacer predicciones en el endpoint **/predict/aidtec**.
+La API usará modelos entrenados y serializados con pickle o joblib para hacer predicciones en los diferentes endpoints correspondientes a cada desafío.
 
-La idea es realizar diferentes endpoints para diferentes tipos de desafíos. Todos colgarán de **/predict**.
+La idea es realizar diferentes endpoints para diferentes tipos de desafíos.
+
+Se realizarán routers distintos para cada desafío de ML.
 
 ## 2. Salir de CGNAT
 
-Mi proveedor de internet **Pepehone** por lo visto usa el servicio [**CGNAT**](https://www.ysi.si/es/tendencias/4692/cgnat-que-es-y-como-funciona) que asigna la misma ip a varios usuarios. Este hecho imposibilita utilizar la ip y redireccionarla al ordenador servidor
+Mi proveedor de internet **Pepehone** por lo visto usa el servicio [**CGNAT**](https://www.ysi.si/es/tendencias/4692/cgnat-que-es-y-como-funciona) que asigna la misma ip a varios usuarios. Este hecho imposibilita utilizar la ip y redireccionarla al ordenador servidor.
+
+Para salir de CGNAT ha bastado con llamar al servicio técnico y pedirlo. En 24 horas estaba hecho.
 
 ## 3. Port Forwarding
 
@@ -30,17 +34,17 @@ En **Acces Control** > **Port Forwarding** se añaden 2 reglas manuales:
 
 ## 4. Dominio
 
-Con los pasos anterior ya se podría poner en marcha el servidor. Las solicitudes a la ip_publica:5000 deberían tener respuesta.
+Con los pasos anterior ya se podría poner en marcha el servidor. Las solicitudes a la <ip_publica>:5000 deberían tener respuesta.
 
-Para evitar usar la ip de mi proveedor que supuestamente es dinámica (veremos más adelante como solventar este problema) compro un dominio en [**porkbun.com**](https://porkbun.com)
+Para evitar usar la ip de mi proveedor que supuestamente es dinámica (veremos más adelante como solventar este problema) compro un dominio en [**porkbun.com**](https://porkbun.com).
 
-Compro el dominio: http://www.trymlmodels.com
+El dominio comprado es el siguiente: **trymlmodels.com** con subdominio www.
 
-Hay que desplegar la pestaña **details** y habilitar **API ACCESS**.
+Dentro de la plataforma de porkbun, hay que desplegar la pestaña **details** y habilitar **API ACCESS**.
 
 También hay que crear la **secret_api_key** y la **api_key**. Estas dos keys hay que anotarlas porque se usarán más adelante.
 
-## 5. Servicio de DNS
+## 5. Servicio DDNS
 
 Para redirigir automáticamente el dominio a la IP correspondiente hay que poner en marcha un servicio que verifique periódicamente si la ip ha cambiado y la actualice en **porkbun**.
 
@@ -90,7 +94,6 @@ $ systemctl status oink_ddns
 
 Este servicio hace apuntar mi dominio a mi ip pública. Actualiza temporalmente la ip pública comprobándolo ya que será cambiante.
 
-
 ## API
 
 Para la API he usado FastAPI
@@ -98,8 +101,9 @@ Para la API he usado FastAPI
 Para hacer request de momento funcionan los siguientes endpoints:
 
 - GET http://www.trymlmodels.com:5000
-- GET http://www.trymlmodels.com:5000/about
-- POST con un csv http://www.trymlmodels.com:5000/predict/aidtec
+- GET http://www.trymlmodels.com:5000/about > Información del servidor
+- POST con un csv http://www.trymlmodels.com:5000/aidtec/predict > devuelve las predicciones
+- GET http://www.trymlmodels.com:5000/aidtec/model > devuelve info del modelo
 
 ## Servidor
 Para correr el servidor en el puerto 5000 hay que lanzar el siguiente comando:

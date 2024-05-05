@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "mlhomeserver"
+version = "0.1.0"
+description = "Servidor Casero para correr predicciones de modelos ML"
+authors = ["sertemo <tejedor.moreno@gmail.com>"]
+readme = "README.md"
+packages = [{include = "mlhomeserver", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.111.0"
+scikit-learn = "^1.4.2"
+numpy = "^1.26.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

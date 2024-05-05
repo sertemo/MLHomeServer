@@ -8,9 +8,11 @@ app = FastAPI()
 
 app.include_router(main_router)
 
-@app.get('/')
-async def root():
-    return JSONResponse(content={'info': 'API en pruebas para lanzar predicciones'})
 
-if __name__ == '__main__':
+@app.get("/")
+async def root():
+    return JSONResponse(content={"info": "API en pruebas para lanzar predicciones"})
+
+
+if __name__ == "__main__":
     pass

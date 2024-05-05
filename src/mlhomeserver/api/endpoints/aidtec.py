@@ -16,17 +16,16 @@ import settings
 
 
 router = APIRouter(
-    prefix='/predict',
-    responses={
-        404: {"mensaje": "No encontrado"}
-    },
-    tags=["predict"]
+    prefix="/predict", responses={404: {"mensaje": "No encontrado"}}, tags=["predict"]
 )
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=PredictionResponse)
+
+@router.post(
+    "/", status_code=status.HTTP_201_CREATED, response_model=PredictionResponse
+)
 async def predictions_for_aidtec(file: UploadFile = File(...)):
     try:
-        if file.filename.endswith('.csv'):
+        if file.filename and file.filename.endswith(".csv"):  # TODO: Cambiar todo esto
             # Convierte el archivo cargado en un DataFrame
             data_frame = pd.read_csv(file.file, index_col=0)
             # Cargamos el modelo y los label encoders
@@ -34,24 +33,25 @@ async def predictions_for_aidtec(file: UploadFile = File(...)):
             label_encoder: LabelEncoder = deserialize(settings.LABEL_ENCODER_PATH)
             # Lanzamos las predicciones
             predictions: NDArray[np.int_] = modelo.predict(data_frame)
-            preds_decoded: NDArray[np.int_] = label_encoder.inverse_transform(predictions)
+            preds_decoded: NDArray[np.int_] = label_encoder.inverse_transform(
+                predictions
+            )
 
             final_preds = Prediction(
-                labels=preds_decoded.tolist(),
-                length=len(preds_decoded))
+                labels=preds_decoded.tolist(), length=len(preds_decoded)
+            )
 
             model_info = ModelInfo(
-                last_trained=datetime(2024, 5, 1),
-                parameters=modelo.get_params()
+                last_trained=datetime(2024, 5, 1), parameters=modelo.get_params()
             )
             response_data = {
                 "predictions": final_preds,
-                "model_info": model_info.model_dump()
+                "model_info": model_info.model_dump(),
             }
             return PredictionResponse(
                 status="OK",
                 data=response_data,
-                message="Predicciones realizadas con éxito"
+                message="Predicciones realizadas con éxito",
             )
 
         else:

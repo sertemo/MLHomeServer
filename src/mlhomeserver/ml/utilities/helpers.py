@@ -1,11 +1,13 @@
 """Funciones auxiliares para el ML"""
 
 from functools import lru_cache
+from typing import Any
 
 import pickle
 
+
 @lru_cache(maxsize=300)
-def deserialize(filename: str) -> object:
+def deserialize(filename: str) -> Any:
     """Deserializa un objeto con pickle
     y lo devuelve
 
@@ -19,6 +21,6 @@ def deserialize(filename: str) -> object:
     object
         _description_
     """
-    with open(filename, 'rb') as f:
+    with open(filename, "rb") as f:
         obj = pickle.load(f)
     return obj

@@ -3,9 +3,9 @@
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 
-from .trainer import Trainer
+from mlhomeserver.ml.training.trainer import Trainer
 from ..data_processing.aidtec_transformer import WineDatasetTransformer
-import settings
+import mlhomeserver.settings as settings
 
 nombre = "aidtec"
 

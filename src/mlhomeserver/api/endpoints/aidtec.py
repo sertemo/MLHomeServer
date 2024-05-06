@@ -12,7 +12,7 @@ from sklearn.preprocessing import LabelEncoder
 from ...schemas import Prediction, PredictionResponse, ModelInfo
 from ...ml.utilities.wrappers import SerializableClassifier
 from ...ml.utilities.helpers import deserialize
-import settings
+import mlhomeserver.settings as settings
 
 
 router = APIRouter(

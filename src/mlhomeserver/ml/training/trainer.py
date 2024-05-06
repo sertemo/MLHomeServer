@@ -12,7 +12,7 @@ from sklearn.model_selection import (
     cross_val_predict,
 )
 
-from ..utilities.wrappers import SerializableClassifier, SerializableTransformer
+from mlhomeserver.ml.utilities.wrappers import SerializableClassifier, SerializableTransformer
 import settings
 
 

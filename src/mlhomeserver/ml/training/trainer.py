@@ -1,5 +1,7 @@
 """Módulo con la clase Trainer General válida para entrenar cualquier modelo"""
 
+import time
+
 import pandas as pd
 from sklearn.base import ClassifierMixin, TransformerMixin
 from sklearn.preprocessing import LabelEncoder
@@ -35,6 +37,8 @@ class Trainer:
         """Ejecuta la Pipeline de preproceso
         y entrenamiento guardando el modelo
         y el label encoder en caso de haberlo"""
+        start = time.perf_counter()
+
         # Preprocesamos
         df_preprocessed: pd.DataFrame = self.preprocesador.fit_transform(self.dataset)
 
@@ -78,4 +82,14 @@ class Trainer:
         if self.label_encoder:
             label_encoder.save(settings.MODELS_FOLDER / self.nombre + "_" + "labelencoder.joblib")
 
-        print("Entrenamiento finalizado con éxito")
+        # Fin del contador
+        end = time.perf_counter()
+
+        # Calcular el tiempo total en segundos
+        elapsed_time = end - start
+
+        # Convertir segundos a minutos y segundos
+        minutes = int(elapsed_time // 60)
+        seconds = int(elapsed_time % 60)
+
+        print(f"Entrenamiento terminado. Tiempo de ejecución: {minutes} minutos y {seconds} segundos")

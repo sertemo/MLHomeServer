@@ -16,14 +16,14 @@ import settings
 
 
 router = APIRouter(
-    prefix="/predict", responses={404: {"mensaje": "No encontrado"}}, tags=["predict"]
+    responses={404: {"mensaje": "No encontrado"}}, tags=["predict"]
 )
 
 
 @router.post(
-    "/", status_code=status.HTTP_201_CREATED, response_model=PredictionResponse
+    "/predict", status_code=status.HTTP_201_CREATED, response_model=PredictionResponse
 )
-async def predictions_for_aidtec(file: UploadFile = File(...)):
+async def predicciones(file: UploadFile = File(...)):
     try:
         if file.filename and file.filename.endswith(".csv"):  # TODO: Cambiar todo esto
             # Convierte el archivo cargado en un DataFrame
@@ -41,13 +41,10 @@ async def predictions_for_aidtec(file: UploadFile = File(...)):
                 labels=preds_decoded.tolist(), length=len(preds_decoded)
             )
 
-            model_info = ModelInfo(
-                last_trained=datetime(2024, 5, 1), parameters=modelo.get_params()
-            )
             response_data = {
                 "predictions": final_preds,
-                "model_info": model_info.model_dump(),
             }
+
             return PredictionResponse(
                 status="OK",
                 data=response_data,
@@ -59,3 +56,14 @@ async def predictions_for_aidtec(file: UploadFile = File(...)):
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get(
+    "/model", status_code=status.HTTP_200_OK, response_model=ModelInfo
+)
+async def detalles_modelo():
+
+    return ModelInfo(
+                last_trained=datetime(2024, 5, 1),
+                parameters= {"n_estimators": 900}  #modelo.get_params()
+            )

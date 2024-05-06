@@ -1,13 +1,17 @@
 # ML Home Server
+### v0.1.0
 
-Pequeño proyecto para montar un servidor en el ordenador Samsung del 2011 con linux.
+## Descripción
+Pequeño proyecto para montar un servidor en el ordenador Samsung del 2011 con Xubuntu.
 
-La idea es poder utilizarlo como API para hacer predicciones con modelos y devolver dichas predicciones
+La idea es poder utilizarlo como API para hacer predicciones con modelos de ML y devolver dichas predicciones.
 
-Los pasos que he tenido que seguir para conseguirlo se describen a continuación
+## Construido con
+### API
+- [FastAPI](https://fastapi.tiangolo.com/)
 
-## 1. API con FastAPI
-
+## Pasos realizados
+### 1. API con FastAPI
 Crear una pequeña API usando FastAPI para dar respuesta a las peticiones.
 
 La API usará modelos entrenados y serializados con pickle o joblib para hacer predicciones en los diferentes endpoints correspondientes a cada desafío.
@@ -16,14 +20,12 @@ La idea es realizar diferentes endpoints para diferentes tipos de desafíos.
 
 Se realizarán routers distintos para cada desafío de ML.
 
-## 2. Salir de CGNAT
-
+### 2. Salir de CGNAT
 Mi proveedor de internet **Pepehone** por lo visto usa el servicio [**CGNAT**](https://www.ysi.si/es/tendencias/4692/cgnat-que-es-y-como-funciona) que asigna la misma ip a varios usuarios. Este hecho imposibilita utilizar la ip y redireccionarla al ordenador servidor.
 
 Para salir de CGNAT ha bastado con llamar al servicio técnico y pedirlo. En 24 horas estaba hecho.
 
-## 3. Port Forwarding
-
+### 3. Port Forwarding
 Hay que configurar dentro de las opciones del router un redireccionamiento de ips y puertos.
 
 Entramos en el router con **192.168.1.1**
@@ -32,8 +34,7 @@ En **Acces Control** > **Port Forwarding** se añaden 2 reglas manuales:
 - Internal host con la IP privada de ethernet de mi ordenador Samsung y 5000 como external e internal port
 - Internal host con la IP privada de wifi de mi ordenador Samsung y 5001 como external y 5000 internal port
 
-## 4. Dominio
-
+### 4. Dominio
 Con los pasos anterior ya se podría poner en marcha el servidor. Las solicitudes a la <ip_publica>:5000 deberían tener respuesta.
 
 Para evitar usar la ip de mi proveedor que supuestamente es dinámica (veremos más adelante como solventar este problema) compro un dominio en [**porkbun.com**](https://porkbun.com).
@@ -44,12 +45,10 @@ Dentro de la plataforma de porkbun, hay que desplegar la pestaña **details** y 
 
 También hay que crear la **secret_api_key** y la **api_key**. Estas dos keys hay que anotarlas porque se usarán más adelante.
 
-## 5. Servicio DDNS
-
+### 5. Servicio DDNS
 Para redirigir automáticamente el dominio a la IP correspondiente hay que poner en marcha un servicio que verifique periódicamente si la ip ha cambiado y la actualice en **porkbun**.
 
-### 5.1 Descargar oink_ddns
-
+#### 5.1 Descargar oink_ddns
 Descargamos [**Oink**](https://github.com/RLado/Oink) para realizar dicha tarea.
 
 Descargamos el paquete: https://github.com/RLado/Oink/releases/download/v1.1.0/oink_1.1-0_amd64.deb
@@ -60,8 +59,7 @@ Una vez descargamos se instala haciendo:
 $ dpkg -i oink_1.1-0_amd64.deb
 ```
 
-### 5.2 Configurar el archivo config.json
-
+#### 5.2 Configurar el archivo config.json
 El archivo de configuración está en **etc/oink_ddns/config.json**
 
 Como tiene permisos de administrador es aconsejable realizar primero un:
@@ -77,10 +75,29 @@ Y después abrirlo con **nano** para configurarlo
 $ nano config.json
 ```
 
-Poner las apikeys y secretapikeys proporcionadas por **porkbun**. En el subdominio poner **www**.
+Poner las apikey y secretapikey proporcionadas por **porkbun**. Hay que crear dos entradas dentro de **domains**, una con subdominio y otra sin subdominio para que ambos se actualicen en porkbun.
 
-### 5.3 Correr el servicio en el ordenador
+```sh
+{
+    "global": {
+        "secretapikey": "sk1_xxxxxx",
+        "apikey": "pk1_xxxxx",
+        "interval": 900,
+        "ttl": 600
+    },
+    "domains": [
+        {
+            "domain": "trymlmodels.com",
+            "subdomain": "www"
+        },
+	{
+	    "domain": "trymlmodels.com"
+        }
+    ]
+}
+```
 
+#### 5.3 Correr el servicio en el ordenador
 Para correr el servicio:
 ```sh
 $ systemctl start oink_ddns
@@ -94,24 +111,49 @@ $ systemctl status oink_ddns
 
 Este servicio hace apuntar mi dominio a mi ip pública. Actualiza temporalmente la ip pública comprobándolo ya que será cambiante.
 
-## API
 
-Para la API he usado FastAPI
-
-Para hacer request de momento funcionan los siguientes endpoints:
-
-- GET http://www.trymlmodels.com:5000
-- GET http://www.trymlmodels.com:5000/about > Información del servidor
-- POST con un csv http://www.trymlmodels.com:5000/aidtec/predict > devuelve las predicciones
-- GET http://www.trymlmodels.com:5000/aidtec/model > devuelve info del modelo
-
-## Servidor
-Para correr el servidor en el puerto 5000 hay que lanzar el siguiente comando:
+### 6. Servidor Uvicorn
+Para correr la API en el servidor en el puerto 5000 hay que lanzar el siguiente comando:
 ```sh
-$ uvicorn main:app --host 0.0.0.0 --port 5000 --reload
+$ uvicorn src.mlhomeserver.main:app --host 0.0.0.0 --port 5000 --reload
 ```
 
-**OJO** : Usar solo la flag `--reload` en desarrollo.
+Por comodidad se prepara un scrip en bash: `start.sh` para ejecutar este comando:
+Para ejecutar con `--reload`:
+```sh
+$ ./start.sh dev
+```
+
+Para ejecutar en modo producción:
+```sh
+$ ./start.sh
+```
+
+## Peticiones a la API
+Para hacer request de momento funcionan los siguientes endpoints:
+
+- GET http://www.trymlmodels.com:5000 > mensaje bienvenida
+- GET http://www.trymlmodels.com:5000/about > Información del servidor
+- POST con un csv http://www.trymlmodels.com:5000/<desafio>/predict > devuelve las predicciones
+- GET http://www.trymlmodels.com:5000/<desafio>/model > devuelve info del modelo
+
+## Agradecimientos
+Special thanks to **Miguel Zubiaga** *aka _mz* por ayudarme a montar este mini proyecto.
+
+## Licencia
+Copyright 2024 Sergio Tejedor Moreno
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 
 

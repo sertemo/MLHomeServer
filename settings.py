@@ -3,11 +3,11 @@
 from pathlib import Path
 
 MODELS_FOLDER = Path('models')
-MODELO_PATH = MODELS_FOLDER / 'wine_random_forest_STM.pkl'
-LABEL_ENCODER_PATH = MODELS_FOLDER / 'wine_label_encoder.pkl'
+DATA_PATH = Path('data')
 
 # Training
-
 SPLITS_FOR_CV = 5
-# Labels
+
+# Desafios
+## Aidtec
 AIDTEC_LABEL_COL_NAME = 'calidad'

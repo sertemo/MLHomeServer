@@ -78,9 +78,9 @@ class Trainer:
         self.modelo.fit(X_train, y_train)
 
         # Guardamos el modelo y label encoder en caso de haber
-        self.modelo.save(settings.MODELS_FOLDER / self.nombre + "_" + "model.joblib")
+        self.modelo.save(settings.MODELS_FOLDER / (self.nombre + "_" + "model.joblib"))
         if self.label_encoder:
-            label_encoder.save(settings.MODELS_FOLDER / self.nombre + "_" + "labelencoder.joblib")
+            label_encoder.save(settings.MODELS_FOLDER / (self.nombre + "_" + "labelencoder.joblib"))
 
         # Fin del contador
         end = time.perf_counter()

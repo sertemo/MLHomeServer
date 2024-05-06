@@ -13,6 +13,7 @@ class Prediction(BaseModel):
 class ModelInfo(BaseModel):
     last_trained: datetime
     parameters: dict[str, Any]
+    competition: str
 
     def model_dump(self):
         # Convertir todos los datos del modelo a tipos serializables

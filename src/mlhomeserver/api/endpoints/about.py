@@ -1,4 +1,4 @@
-"""Módulo del endpoint /about"""
+"""Módulo del endpoint about"""
 
 import platform
 
@@ -28,6 +28,12 @@ async def about():
                 de la web de Kopuru.
                 """
                 ),
+            },
+            "autor": {
+                "nombre": "Sergio Tejedor",
+                "web": "https://tejedormoreno.com",
+                "github": "https://github.com/sertemo",
+                "Linkdin": "www.linkedin.com/in/sertemo"
             },
             "server": {
                 "system": platform.system(),

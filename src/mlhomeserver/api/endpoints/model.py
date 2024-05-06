@@ -16,7 +16,8 @@ async def detalles_modelo(nombre_desafio):
     modelo: SerializableClassifier = load_model(nombre_desafio)
     model_info = ModelInfo(
         last_trained=datetime(2024, 5, 1),
-        parameters=modelo.get_params()
+        parameters=modelo.get_params(),
+        competition=nombre_desafio
     )
 
     response_data = {

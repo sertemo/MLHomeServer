@@ -21,7 +21,45 @@ Este proyecto ofrece además la posibilidad de entrenar modelos.
 ### Gestor dependencias y env
 - Poetry
 
-## Entrenar un modelo para un desafío
+## Entrenar un modelo
+### 1. Configurar el archivo desafios_settings.py
+Añadir los retos correspondientes al diccionario `DESAFIOS`
+
+Este es el esquema a seguir:
+
+```python
+DESAFIOS = {
+    "aidtec": {
+        "label_col_name": "calidad",
+        "train_dataset": pd.read_csv(
+            settings.DATA_PATH / "aidtec" / "train.csv", index_col=0
+        ),
+        "preprocesador": WineDatasetTransformer(
+            drop_columns=[
+                "year",
+                "color",
+                "alcohol",
+                "densidad",
+                "dioxido de azufre libre",
+            ]
+        ),
+        "modelo": RandomForestClassifier(n_estimators=900, random_state=42),
+        "label_encoder": True,
+    },
+}
+```
+
+
+
+### 2. Ejecutar train.sh
+```sh
+$ ./train.sh <nombre_desafio>
+```
+
+Esto ejecutará el script `train.py` en la carpeta **ml/training** con el nombre del desafío como argumento.
+
+Es importante que el nombre del desafío coincida con el establecido en el archivo `desafios_settings.py`. Todos los datos del entrenamiento será extraido de ahi.
+
 
 ## Predecir
 

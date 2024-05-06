@@ -13,7 +13,7 @@ from sklearn.model_selection import (
 )
 
 from mlhomeserver.ml.utilities.wrappers import SerializableClassifier, SerializableTransformer
-import settings
+import mlhomeserver.settings as settings
 
 
 class Trainer:

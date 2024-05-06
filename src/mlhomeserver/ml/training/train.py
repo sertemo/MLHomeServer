@@ -21,20 +21,20 @@ import argparse
 from mlhomeserver.ml.training.trainer import Trainer
 import mlhomeserver.ml.desafios_settings as dsettings
 
+
 def setup_parser() -> argparse.ArgumentParser:
     """Configura el parser"""
-    parser = argparse.ArgumentParser(
-        description="Entrena modelos para desafíos"
-    )
+    parser = argparse.ArgumentParser(description="Entrena modelos para desafíos")
 
     # Añadimos argumentos
     parser.add_argument(
         "desafio",
         help="Nombre del desafío",
         choices=dsettings.DESAFIOS.keys(),
-        type=str
+        type=str,
     )
     return parser
+
 
 def train() -> None:
     # Parseamos los argumentos
@@ -43,10 +43,10 @@ def train() -> None:
 
     nombre_desafio = args.desafio
     trainer = Trainer(
-        nombre_desafio=nombre_desafio,
-        **dsettings.DESAFIOS[nombre_desafio]
+        nombre_desafio=nombre_desafio, **dsettings.DESAFIOS[nombre_desafio]
     )
     trainer.run()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     train()

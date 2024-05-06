@@ -9,20 +9,19 @@ from mlhomeserver.ml.data_processing.aidtec_transformer import WineDatasetTransf
 DESAFIOS = {
     "aidtec": {
         "label_col_name": "calidad",
-        "dataset": pd.read_csv(settings.DATA_PATH / "aidtec" / "train.csv", index_col=0),
+        "train_dataset": pd.read_csv(
+            settings.DATA_PATH / "aidtec" / "train.csv", index_col=0
+        ),
         "preprocesador": WineDatasetTransformer(
             drop_columns=[
-                'year',
-                'color',
-                'alcohol',
-                'densidad',
-                'dioxido de azufre libre'
+                "year",
+                "color",
+                "alcohol",
+                "densidad",
+                "dioxido de azufre libre",
             ]
         ),
-        "modelo": RandomForestClassifier(
-            n_estimators=900,
-            random_state=42
-        ),
-        "label_encoder": True
+        "modelo": RandomForestClassifier(n_estimators=900, random_state=42),
+        "label_encoder": True,
     },
 }

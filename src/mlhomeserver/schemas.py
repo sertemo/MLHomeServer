@@ -22,7 +22,7 @@ class ModelInfo(BaseModel):
         }
 
 
-class PredictionResponse(BaseModel):
+class CustomResponse(BaseModel):
     status: str
     data: dict[str, Any] = Field(default_factory=dict)
     timestamp: datetime = Field(default_factory=datetime.now)

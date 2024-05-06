@@ -1,3 +1,17 @@
+# Copyright 2024 Sergio Tejedor Moreno
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """Módulo con la clase Trainer General válida para entrenar cualquier modelo"""
 
 from pathlib import Path
@@ -13,22 +27,25 @@ from sklearn.model_selection import (
     cross_val_predict,
 )
 
-from mlhomeserver.ml.utilities.wrappers import SerializableClassifier, SerializableTransformer
+from mlhomeserver.ml.utilities.wrappers import (
+    SerializableClassifier,
+    SerializableTransformer,
+)
 import mlhomeserver.settings as settings
 
 
 class Trainer:
     def __init__(
-            self,
-            nombre_desafio: str,
-            dataset: pd.DataFrame,
-            label_col_name: str,
-            preprocesador: TransformerMixin,
-            modelo: ClassifierMixin,
-            label_encoder: bool = False
-            ) -> None:
+        self,
+        nombre_desafio: str,
+        train_dataset: pd.DataFrame,
+        label_col_name: str,
+        preprocesador: TransformerMixin,
+        modelo: ClassifierMixin,
+        label_encoder: bool = False,
+    ) -> None:
         self.nombre = nombre_desafio
-        self.dataset = dataset
+        self.dataset = train_dataset
         self.label_col_name = label_col_name
         self.preprocesador = preprocesador
         self.modelo = modelo
@@ -84,9 +101,11 @@ class Trainer:
         # Creamos el folder por si no existe
         modelo_desafio_folder = settings.MODELS_FOLDER / Path(self.nombre)
         modelo_desafio_folder.mkdir(exist_ok=True)
-        self.modelo.save(modelo_desafio_folder / (self.nombre + "_" + "model.joblib"))
+        self.modelo.save(modelo_desafio_folder / (self.nombre + "_" + settings.MODEL_SUFFIX_NAME))
         if self.label_encoder:
-            label_encoder.save(modelo_desafio_folder / (self.nombre + "_" + "labelencoder.joblib"))
+            label_encoder.save(
+                modelo_desafio_folder / (self.nombre + "_" + settings.LABEL_ENCODER_SUFFIX_NAME)
+            )
 
         # Fin del contador
         end = time.perf_counter()
@@ -98,7 +117,9 @@ class Trainer:
         minutes = int(elapsed_time // 60)
         seconds = int(elapsed_time % 60)
 
-        print(f"Entrenamiento terminado. Tiempo de ejecución: {minutes} minutos y {seconds} segundos")
+        print(
+            f"Entrenamiento terminado. Tiempo de ejecución: {minutes} minutos y {seconds} segundos"
+        )
         print(f"Guardado modelo en {modelo_desafio_folder}")
         if self.label_encoder:
             print(f"Guardado LabelEncoder en {modelo_desafio_folder}")

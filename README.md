@@ -18,9 +18,14 @@ Este proyecto ofrece además la posibilidad de entrenar modelos.
 - Pytest
 - Black
 
+### Gestor dependencias y env
+- Poetry
+
 ## Entrenar un modelo para un desafío
 
 ## Predecir
+
+----
 
 ## Puesta en marcha del servidor
 ### 1. API con FastAPI

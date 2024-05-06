@@ -53,7 +53,7 @@ class DeserializableMixin(SerializableMixin):
     """
 
     @classmethod
-    def load(cls, model_path: str | Path) -> "SerializableClassifier":
+    def load(cls, model_path: str | Path) -> Any:
         with open(model_path, "rb") as f:
             classifier = cast(SerializableClassifier, joblib.load(f))
         return classifier

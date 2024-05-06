@@ -1,5 +1,6 @@
 """Módulo con la clase Trainer General válida para entrenar cualquier modelo"""
 
+from pathlib import Path
 import time
 
 import pandas as pd
@@ -52,6 +53,7 @@ class Trainer:
 
         # Evaluamos en CV
         # Evaluamos en cross val
+        print("Evaluando el modelo ...")
         results_cv = cross_val_score(
             self.modelo,
             X_train,
@@ -74,13 +76,17 @@ class Trainer:
 
         # Entrenamos el modelo
         # Serializamos con el wrapper
+        print("Entrenando el modelo ...")
         self.modelo = SerializableClassifier(self.modelo)
         self.modelo.fit(X_train, y_train)
 
         # Guardamos el modelo y label encoder en caso de haber
-        self.modelo.save(settings.MODELS_FOLDER / (self.nombre + "_" + "model.joblib"))
+        # Creamos el folder por si no existe
+        modelo_desafio_folder = settings.MODELS_FOLDER / Path(self.nombre)
+        modelo_desafio_folder.mkdir(exist_ok=True)
+        self.modelo.save(modelo_desafio_folder / (self.nombre + "_" + "model.joblib"))
         if self.label_encoder:
-            label_encoder.save(settings.MODELS_FOLDER / (self.nombre + "_" + "labelencoder.joblib"))
+            label_encoder.save(modelo_desafio_folder / (self.nombre + "_" + "labelencoder.joblib"))
 
         # Fin del contador
         end = time.perf_counter()
@@ -93,3 +99,6 @@ class Trainer:
         seconds = int(elapsed_time % 60)
 
         print(f"Entrenamiento terminado. Tiempo de ejecución: {minutes} minutos y {seconds} segundos")
+        print(f"Guardado modelo en {modelo_desafio_folder}")
+        if self.label_encoder:
+            print(f"Guardado LabelEncoder en {modelo_desafio_folder}")

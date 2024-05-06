@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Inicializa el servidor #
+
 # Comprobar si se pasa el argumento 'dev'
 if [[ $1 == "dev" ]]; then
     # Ejecutar uvicorn con la opción --reload

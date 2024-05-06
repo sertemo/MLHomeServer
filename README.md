@@ -6,11 +6,23 @@ Pequeño proyecto para montar un servidor en el ordenador Samsung del 2011 con X
 
 La idea es poder utilizarlo como API para hacer predicciones con modelos de ML y devolver dichas predicciones.
 
+Este proyecto ofrece además la posibilidad de entrenar modelos.
+
 ## Construido con
 ### API
 - [FastAPI](https://fastapi.tiangolo.com/)
 
-## Pasos realizados
+### Tests
+- Flake8
+- Mypy
+- Pytest
+- Black
+
+## Entrenar un modelo para un desafío
+
+## Predecir
+
+## Puesta en marcha del servidor
 ### 1. API con FastAPI
 Crear una pequeña API usando FastAPI para dar respuesta a las peticiones.
 

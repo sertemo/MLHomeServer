@@ -418,13 +418,13 @@ files = [
 
 [[package]]
 name = "jinja2"
-version = "3.1.3"
+version = "3.1.4"
 description = "A very fast and expressive template engine."
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "Jinja2-3.1.3-py3-none-any.whl", hash = "sha256:7d6d50dd97d52cbc355597bd845fabfbac3f551e1f99619e39a35ce8c370b5fa"},
-    {file = "Jinja2-3.1.3.tar.gz", hash = "sha256:ac8bd6544d4bb2c9792bf3a159e80bba8fda7f07e81bc3aed565432d5925ba90"},
+    {file = "jinja2-3.1.4-py3-none-any.whl", hash = "sha256:bc5dd2abb727a5319567b7a813e6a2e7318c39f4f487cfe6c89c6f9c7d25197d"},
+    {file = "jinja2-3.1.4.tar.gz", hash = "sha256:4a3aee7acbbe7303aede8e9648d13b8bf88a429282aa6122a993f0ac800cb369"},
 ]
 
 [package.dependencies]
@@ -1312,6 +1312,17 @@ anyio = ">=3.4.0,<5"
 full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.7)", "pyyaml"]
 
 [[package]]
+name = "style"
+version = "1.1.0"
+description = "🌈 Terminal string styling"
+optional = false
+python-versions = "*"
+files = [
+    {file = "style-1.1.0-py2.py3-none-any.whl", hash = "sha256:6485a4bcb84629341a5fd1587fe3ac4887daa4741f0c8a1d01b9c3c8a263afe7"},
+    {file = "style-1.1.0.tar.gz", hash = "sha256:8eb365fc15039b19b728bd4e6e85fb7daf24e7aeeec6a15a666f97484c564005"},
+]
+
+[[package]]
 name = "threadpoolctl"
 version = "3.5.0"
 description = "threadpoolctl"
@@ -1456,6 +1467,19 @@ files = [
     {file = "ujson-5.9.0-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:07e0cfdde5fd91f54cd2d7ffb3482c8ff1bf558abf32a8b953a5d169575ae1cd"},
     {file = "ujson-5.9.0.tar.gz", hash = "sha256:89cc92e73d5501b8a7f48575eeb14ad27156ad092c2e9fc7e3cf949f07e75532"},
 ]
+
+[[package]]
+name = "update"
+version = "0.0.1"
+description = ""
+optional = false
+python-versions = "*"
+files = [
+    {file = "update-0.0.1-py2.py3-none-any.whl", hash = "sha256:a25522b4bf60e3e3c1a3ff3ca3a4f5a328ac4b8ff400fdc9614483147e313323"},
+]
+
+[package.dependencies]
+style = "1.1.0"
 
 [[package]]
 name = "uvicorn"
@@ -1698,4 +1722,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "dca546b4089eff189a29f7a158d1c9a604655514956a66bb337a3262232db88f"
+content-hash = "e568976eff6e5b190c7d30d880f4a17ff1bd8058300c7c3546668c05c3e24769"

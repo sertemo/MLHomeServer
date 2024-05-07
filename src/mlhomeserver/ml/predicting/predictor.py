@@ -17,7 +17,6 @@
 import numpy as np
 from numpy.typing import NDArray
 from pathlib import Path
-import time
 
 import pandas as pd
 from sklearn.base import TransformerMixin
@@ -32,6 +31,7 @@ import mlhomeserver.settings as settings
 
 class Predictor:
     """Clase general para predecir"""
+
     def __init__(
         self,
         nombre_desafio: str,
@@ -44,7 +44,9 @@ class Predictor:
         self.label_col_name = label_col_name
         self.preprocesador = preprocesador
         self._nombre_modelo = "".join([self.nombre, "_", settings.MODEL_SUFFIX_NAME])
-        self._nombre_label_encoder = "".join([self.nombre, "_", settings.LABEL_ENCODER_SUFFIX_NAME])
+        self._nombre_label_encoder = "".join(
+            [self.nombre, "_", settings.LABEL_ENCODER_SUFFIX_NAME]
+        )
 
     def run(self) -> None:
         """Ejecuta la Pipeline de preproceso
@@ -71,11 +73,12 @@ class Predictor:
         self.preds: NDArray[np.int_] = self.modelo.predict(X_test)
 
         # Comprobamos si hay label encoders
-        ruta_label_encoder = settings.MODELS_FOLDER / Path(self.nombre) / self._nombre_label_encoder
+        ruta_label_encoder = (
+            settings.MODELS_FOLDER / Path(self.nombre) / self._nombre_label_encoder
+        )
         if ruta_label_encoder.exists():
-            label_encoder: SerializableTransformer = SerializableTransformer.load(ruta_label_encoder)
+            label_encoder: SerializableTransformer = SerializableTransformer.load(
+                ruta_label_encoder
+            )
             # Descodificamos las predicciones
             self.preds = label_encoder.inverse_transform(self.preds)
-
-
-

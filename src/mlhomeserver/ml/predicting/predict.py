@@ -13,24 +13,22 @@
 # limitations under the License.
 
 """Módulo que ejecuta la lógica de predicción"""
+
 import numpy as np
 from numpy.typing import NDArray
 import pandas as pd
 
 from mlhomeserver.ml.predicting.predictor import Predictor
-import mlhomeserver.ml.desafios_settings as dsettings
+import mlhomeserver.config as dsettings
 
 
-def predict(
-        nombre_desafio: str,
-        dataset_predecir: pd.DataFrame
-) -> NDArray[np.int_]:
-
+def predict(nombre_desafio: str, dataset_predecir: pd.DataFrame) -> NDArray[np.int_]:
+    """Devuelve las predicciones utilizando el Predictor"""
     predictor = Predictor(
         nombre_desafio=nombre_desafio,
         dataset=dataset_predecir,
-        label_col_name=dsettings.DESAFIOS[nombre_desafio]["label_col_name"],
-        preprocesador=dsettings.DESAFIOS[nombre_desafio]["preprocesador"]
+        label_col_name=dsettings.CONFIG_DICT[nombre_desafio]["label_col_name"],
+        preprocesador=dsettings.CONFIG_DICT[nombre_desafio]["preprocesador"],
     )
     predictor.run()
 
@@ -38,5 +36,4 @@ def predict(
 
 
 if __name__ == "__main__":
-    print(predict())
-
+    pass

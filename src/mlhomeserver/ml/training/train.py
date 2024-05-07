@@ -19,7 +19,7 @@
 import argparse
 
 from mlhomeserver.ml.training.trainer import Trainer
-import mlhomeserver.ml.desafios_settings as dsettings
+import mlhomeserver.config as dsettings
 
 
 def setup_parser() -> argparse.ArgumentParser:
@@ -43,7 +43,7 @@ def train() -> None:
 
     nombre_desafio = args.desafio
     trainer = Trainer(
-        nombre_desafio=nombre_desafio, **dsettings.DESAFIOS[nombre_desafio]
+        nombre_desafio=nombre_desafio, **dsettings.CONFIG_DICT[nombre_desafio]
     )
     trainer.run()
 

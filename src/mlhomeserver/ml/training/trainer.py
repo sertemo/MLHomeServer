@@ -101,10 +101,13 @@ class Trainer:
         # Creamos el folder por si no existe
         modelo_desafio_folder = settings.MODELS_FOLDER / Path(self.nombre)
         modelo_desafio_folder.mkdir(exist_ok=True)
-        self.modelo.save(modelo_desafio_folder / (self.nombre + "_" + settings.MODEL_SUFFIX_NAME))
+        self.modelo.save(
+            modelo_desafio_folder / (self.nombre + "_" + settings.MODEL_SUFFIX_NAME)
+        )
         if self.label_encoder:
             label_encoder.save(
-                modelo_desafio_folder / (self.nombre + "_" + settings.LABEL_ENCODER_SUFFIX_NAME)
+                modelo_desafio_folder
+                / (self.nombre + "_" + settings.LABEL_ENCODER_SUFFIX_NAME)
             )
 
         # Fin del contador

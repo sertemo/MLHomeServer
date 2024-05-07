@@ -22,13 +22,13 @@ Este proyecto ofrece además la posibilidad de entrenar modelos.
 - Poetry
 
 ## Entrenar un modelo
-### 1. Configurar el archivo desafios_settings.py
-Añadir los retos correspondientes al diccionario `DESAFIOS`
+### 1. Configurar el archivo config.py dentro de src/mlhomeserver
+Añadir los retos correspondientes al diccionario `CONFIG_DICT`
 
 Este es el esquema a seguir:
 
 ```python
-DESAFIOS = {
+CONFIG_DICT = {
     "aidtec": {
         "label_col_name": "calidad",
         "train_dataset": pd.read_csv(
@@ -48,7 +48,6 @@ DESAFIOS = {
     },
 }
 ```
-
 
 
 ### 2. Ejecutar train.sh

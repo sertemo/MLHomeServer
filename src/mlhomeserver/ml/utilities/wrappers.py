@@ -1,6 +1,3 @@
-"""Módulo para clases y objetos personalizados válidos
-para todos los proyectos de ML"""
-
 # Copyright 2024 Sergio Tejedor Moreno
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +12,8 @@ para todos los proyectos de ML"""
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Módulo para clases y objetos personalizados válidos
+para todos los proyectos de ML"""
 
 import joblib
 from pathlib import Path

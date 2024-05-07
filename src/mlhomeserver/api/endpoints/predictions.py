@@ -12,18 +12,17 @@ router = APIRouter(responses={404: {"mensaje": "No encontrado"}}, tags=["predict
 
 
 @router.post(
-    "/{nombre_desafio}", status_code=status.HTTP_201_CREATED, response_model=CustomResponse
+    "/{nombre_desafio}",
+    status_code=status.HTTP_201_CREATED,
+    response_model=CustomResponse,
 )
-async def predicciones(nombre_desafio:str, file: UploadFile = File(...)):
+async def predicciones(nombre_desafio: str, file: UploadFile = File(...)):
     try:
         if file.filename and file.filename.endswith(".csv"):
             # Convierte el archivo cargado en un DataFrame
             data_frame = pd.read_csv(file.file, index_col=0)
 
-            preds = predict(
-                nombre_desafio=nombre_desafio,
-                dataset_predecir=data_frame
-            )
+            preds = predict(nombre_desafio=nombre_desafio, dataset_predecir=data_frame)
 
             preds_response = Prediction(labels=preds.tolist(), length=len(preds))
 

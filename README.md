@@ -15,7 +15,7 @@ Este proyecto ofrece además la posibilidad de entrenar modelos.
 
 ## Construido con
 ### API
-- ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
 
 ### Tests
 - Flake8

@@ -1,5 +1,7 @@
 # ML Home Server
 ### v0.1.0
+![Tests](https://github.com/sertemo/EarthQuakeLocator/actions/workflows/tests.yml/badge.svg)
+[![codecov](https://codecov.io/gh/sertemo/MLHomeServer/graph/badge.svg?token=6N7LBN76A2)](https://codecov.io/gh/sertemo/MLHomeServer)
 ![Dependabot](https://img.shields.io/badge/dependabot-enabled-blue.svg?logo=dependabot)
 ![GitHub](https://img.shields.io/github/license/sertemo/EarthQuakeLocator)
 
@@ -13,7 +15,7 @@ Este proyecto ofrece además la posibilidad de entrenar modelos.
 
 ## Construido con
 ### API
-- [FastAPI](https://fastapi.tiangolo.com/)
+- ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
 
 ### Tests
 - Flake8
@@ -197,8 +199,8 @@ Para hacer request de momento funcionan los siguientes endpoints:
 
 - GET http://www.trymlmodels.com:5000 > mensaje bienvenida
 - GET http://www.trymlmodels.com:5000/about > Información del servidor
-- POST con un csv http://www.trymlmodels.com:5000/<desafio>/predict > devuelve las predicciones
-- GET http://www.trymlmodels.com:5000/<desafio>/model > devuelve info del modelo
+- POST con un csv http://www.trymlmodels.com:5000/desafio/predict > devuelve las predicciones
+- GET http://www.trymlmodels.com:5000/desafio/model > devuelve info del modelo
 
 ## Agradecimientos
 Special thanks to **Miguel Zubiaga** *aka _mz* por ayudarme a montar este mini proyecto.

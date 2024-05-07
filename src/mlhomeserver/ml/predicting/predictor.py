@@ -25,6 +25,7 @@ from mlhomeserver.ml.utilities.wrappers import (
     SerializableClassifier,
     SerializableTransformer,
 )
+from mlhomeserver.exceptions import ProcessorError, MissingCompetitionFolderError
 from mlhomeserver.ml.utilities.helpers import load_model
 import mlhomeserver.settings as settings
 
@@ -55,7 +56,12 @@ class Predictor:
         haya"""
 
         # Preprocesamos
-        df_preprocessed: pd.DataFrame = self.preprocesador.fit_transform(self.dataset)
+        try:
+            df_preprocessed: pd.DataFrame = self.preprocesador.fit_transform(
+                self.dataset
+            )
+        except Exception as e:
+            raise ProcessorError(f"Se ha producido un error al preprocesar: {e}")
 
         # Quitamos la columna de los labels
         X_test = df_preprocessed.drop(columns=[self.label_col_name])
@@ -63,8 +69,10 @@ class Predictor:
         # Verificamos que exista carpeta del desafío
         self.carpeta_modelo = settings.MODELS_FOLDER / Path(self.nombre)
         if not self.carpeta_modelo.exists():
-            print(f"No existe la carpeta {self.carpeta_modelo}")
-            return
+            raise MissingCompetitionFolderError(
+                f"No existe la carpeta {self.carpeta_modelo}.\
+                                                Modelo no serializado."
+            )
 
         # Deserializamos el modelo
         self.modelo: SerializableClassifier = load_model(self.nombre)

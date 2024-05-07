@@ -30,7 +30,7 @@ def setup_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "desafio",
         help="Nombre del desafío",
-        choices=dsettings.DESAFIOS.keys(),
+        choices=dsettings.CONFIG_DICT.keys(),
         type=str,
     )
     return parser

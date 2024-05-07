@@ -12,11 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from datetime import datetime, timedelta
+from pathlib import Path
 
+from fastapi.testclient import TestClient
+import pandas as pd
 import pytest
+
+from mlhomeserver.main import app
+import mlhomeserver.settings as settings
+
+@pytest.fixture(scope="session")
+def client():
+    return TestClient(app)
 
 
 @pytest.fixture(scope="session")
-def my_fix():
-    raise NotImplementedError()
+def df_test_aidtec():
+    return pd.DataFrame(settings.DATA_PATH / Path("aidtec") / "test.csv", index_col=0)

@@ -56,3 +56,17 @@ class NonValidDataset(Exception):
     Exception : _type_
         _description_
     """
+
+
+class ProcessorError(Exception):
+    """Cuando el preprocesado da error"""
+
+
+class MissingCompetitionFolderError(Exception):
+    """Se lanza cuando al predecir, no existe la carpeta
+    con el modelo para ese desafío"""
+
+
+class PredictionRunError(Exception):
+    """Cuando el método run del predictor
+    da error"""

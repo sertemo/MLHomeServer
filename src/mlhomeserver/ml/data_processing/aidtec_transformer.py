@@ -25,7 +25,7 @@ from sklearn.preprocessing import (
     OneHotEncoder,
 )
 
-from mlhomeserver.ml.exceptions import WrongColumnName, WrongColumnType
+from mlhomeserver.exceptions import WrongColumnName, WrongColumnType
 
 
 class WineDatasetTransformer(TransformerMixin, BaseEstimator):

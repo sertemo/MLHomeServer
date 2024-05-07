@@ -18,6 +18,7 @@ import numpy as np
 from numpy.typing import NDArray
 import pandas as pd
 
+from mlhomeserver.exceptions import PredictionRunError
 from mlhomeserver.ml.predicting.predictor import Predictor
 import mlhomeserver.config as dsettings
 
@@ -30,9 +31,12 @@ def predict(nombre_desafio: str, dataset_predecir: pd.DataFrame) -> NDArray[np.i
         label_col_name=dsettings.CONFIG_DICT[nombre_desafio]["label_col_name"],
         preprocesador=dsettings.CONFIG_DICT[nombre_desafio]["preprocesador"],
     )
-    predictor.run()
-
-    return predictor.preds
+    try:
+        predictor.run()
+    except Exception as e:
+        raise PredictionRunError(f"Se ha producido un error al predecir: {e}")
+    else:
+        return predictor.preds
 
 
 if __name__ == "__main__":

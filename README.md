@@ -57,7 +57,7 @@ $ ./train.sh <nombre_desafio>
 
 Esto ejecutará el script `train.py` en la carpeta **ml/training** con el nombre del desafío como argumento.
 
-Es importante que el nombre del desafío coincida con el establecido en el archivo `desafios_settings.py`. Todos los datos del entrenamiento será extraido de ahi.
+Es importante que el nombre del desafío coincida con el establecido en el archivo `desafios_settings.py`. Todos los datos del entrenamiento serán extraido de ahi.
 
 
 ## Predecir

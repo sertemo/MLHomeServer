@@ -27,6 +27,7 @@ from sklearn.model_selection import (
     cross_val_predict,
 )
 
+from mlhomeserver.exceptions import PreProcessorError, NonValidDataset
 from mlhomeserver.ml.utilities.wrappers import (
     SerializableClassifier,
     SerializableTransformer,
@@ -57,8 +58,18 @@ class Trainer:
         y el label encoder en caso de haberlo"""
         start = time.perf_counter()
 
+        # Comprobamos que el dataset tenga la columna target
+        if self.label_col_name not in self.dataset:
+            raise NonValidDataset(
+                f"El Dataset debe contener la columna target: {self.label_col_name}"
+            )
         # Preprocesamos
-        df_preprocessed: pd.DataFrame = self.preprocesador.fit_transform(self.dataset)
+        try:
+            df_preprocessed: pd.DataFrame = self.preprocesador.fit_transform(
+                self.dataset
+            )
+        except Exception as e:
+            raise PreProcessorError(f"Se ha producido un error al preprocesar: {e}")
 
         # Separamos X_train y_train
         X_train = df_preprocessed.drop(columns=[self.label_col_name])
@@ -85,7 +96,7 @@ class Trainer:
             y_train,
             cv=StratifiedKFold(n_splits=settings.SPLITS_FOR_CV),
         )
-        print(f"Resultados de modelo {self.modelo.__class__.__name__}")
+        print(f"Resultados del modelo {self.modelo.__class__.__name__}")
         print(
             f"Accuracy media en CV con {settings.SPLITS_FOR_CV} splits: {results_cv.mean():.3%}"
         )

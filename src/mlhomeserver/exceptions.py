@@ -58,7 +58,7 @@ class NonValidDataset(Exception):
     """
 
 
-class ProcessorError(Exception):
+class PreProcessorError(Exception):
     """Cuando el preprocesado da error"""
 
 

@@ -20,12 +20,34 @@ import pytest
 
 from mlhomeserver.main import app
 import mlhomeserver.settings as settings
+from mlhomeserver.ml.training.trainer import Trainer
 
 @pytest.fixture(scope="session")
 def client():
     return TestClient(app)
 
+@pytest.fixture(scope="session")
+def trainer_bad_preprocessor():
+    trainer = Trainer(
+        nombre_desafio="whatever",
+        label_col_name="calidad",
+        train_dataset=pd.read_csv(
+            settings.DATA_PATH / "aidtec" / "train.csv", index_col=0
+        ),
+        preprocesador=object(),
+        modelo=object(),
+        label_encoder=True,
+    )
+    return trainer
 
 @pytest.fixture(scope="session")
-def df_test_aidtec():
-    return pd.DataFrame(settings.DATA_PATH / Path("aidtec") / "test.csv", index_col=0)
+def trainer_bad_dataframe():
+    trainer = Trainer(
+        nombre_desafio="whatever",
+        label_col_name="calidad",
+        train_dataset=pd.DataFrame(),
+        preprocesador=object(),
+        modelo=object(),
+        label_encoder=True,
+    )
+    return trainer

@@ -1,5 +1,8 @@
 # ML Home Server
 ### v0.1.0
+![Dependabot](https://img.shields.io/badge/dependabot-enabled-blue.svg?logo=dependabot)
+![GitHub](https://img.shields.io/github/license/sertemo/EarthQuakeLocator)
+
 
 ## Descripción
 Pequeño proyecto para montar un servidor en el ordenador Samsung del 2011 con Xubuntu.
@@ -21,9 +24,15 @@ Este proyecto ofrece además la posibilidad de entrenar modelos.
 ### Gestor dependencias y env
 - Poetry
 
-## Entrenar un modelo
+## Entrenar un modelo localmente
 ### 1. Configurar el archivo config.py dentro de src/mlhomeserver
-Añadir los retos correspondientes al diccionario `CONFIG_DICT`
+Antes de entrenar un modelo hay que definir el desafío y los parámetros necesarios para el entrenamiento.
+
+Se presupone que ya se han hecho las pruebas pertinentes, el análisis exploratorio para el desafío en los notebooks pertinentes.
+
+El objetivo del entrenamiento manual es tener alojado en el contexto del proyecto el modelo para lanzar las predicciones.
+
+Para que el entrenamiento se realice correctamente hay que añadir los parámetros al diccionario `CONFIG_DICT` dentro de **src/mlhomeserver**.
 
 Este es el esquema a seguir:
 

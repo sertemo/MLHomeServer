@@ -25,7 +25,7 @@ from mlhomeserver.ml.utilities.wrappers import (
     SerializableClassifier,
     SerializableTransformer,
 )
-from mlhomeserver.exceptions import ProcessorError, MissingCompetitionFolderError
+from mlhomeserver.exceptions import PreProcessorError, MissingCompetitionFolderError
 from mlhomeserver.ml.utilities.helpers import load_model
 import mlhomeserver.settings as settings
 
@@ -61,7 +61,7 @@ class Predictor:
                 self.dataset
             )
         except Exception as e:
-            raise ProcessorError(f"Se ha producido un error al preprocesar: {e}")
+            raise PreProcessorError(f"Se ha producido un error al preprocesar: {e}")
 
         # Quitamos la columna de los labels
         X_test = df_preprocessed.drop(columns=[self.label_col_name])

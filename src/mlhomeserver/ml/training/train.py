@@ -19,34 +19,39 @@
 import argparse
 
 from mlhomeserver.ml.training.trainer import Trainer
-import mlhomeserver.config as dsettings
+import mlhomeserver.config as config
 
 
-def setup_parser() -> argparse.ArgumentParser:
-    """Configura el parser"""
-    parser = argparse.ArgumentParser(description="Entrena modelos para desafíos")
+class Training:
+    def _setup_parser(self) -> argparse.ArgumentParser:
+        """Configura el parser"""
+        parser = argparse.ArgumentParser(description="Entrena modelos para desafíos")
 
-    # Añadimos argumentos
-    parser.add_argument(
-        "desafio",
-        help="Nombre del desafío",
-        choices=dsettings.CONFIG_DICT.keys(),
-        type=str,
-    )
-    return parser
+        # Añadimos argumentos
+        parser.add_argument(
+            "desafio",
+            help="Nombre del desafío",
+            choices=config.CONFIG_DICT.keys(),
+            type=str,
+        )
+        return parser
 
+    def train(self) -> None:
+        """Lanza el trainer"""
+        # Parseamos los argumentos
+        parser = self._setup_parser()
+        args = parser.parse_args()
 
-def train() -> None:
-    # Parseamos los argumentos
-    parser = setup_parser()
-    args = parser.parse_args()
-
-    nombre_desafio = args.desafio
-    trainer = Trainer(
-        nombre_desafio=nombre_desafio, **dsettings.CONFIG_DICT[nombre_desafio]
-    )
-    trainer.run()
+        nombre_desafio = args.desafio
+        trainer = Trainer(
+            nombre_desafio=nombre_desafio, **config.CONFIG_DICT[nombre_desafio]
+        )
+        try:
+            trainer.run()
+        except Exception as e:
+            print(f"Se ha producido un error al entrenar: {e}")
+            return
 
 
 if __name__ == "__main__":
-    train()
+    Training().train()

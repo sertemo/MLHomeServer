@@ -6,7 +6,7 @@
 ![GitHub](https://img.shields.io/github/license/sertemo/MLHomeServer)
 ----
 ![Pytest](https://img.shields.io/badge/testing-pytest-blue.svg)
-![Black](https://img.shields.io/badge/code%20style-blue-000000.svg)
+![Black](https://img.shields.io/badge/code%20style-black-blue.svg)
 ![Flake8](https://img.shields.io/badge/linter-flake8-blue.svg)
 ![MyPy](https://img.shields.io/badge/type%20checker-mypy-blue.svg)
 ----

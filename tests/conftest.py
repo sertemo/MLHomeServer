@@ -28,6 +28,12 @@ def client():
     return TestClient(app)
 
 @pytest.fixture(scope="session")
+def train_aidtec_raw():
+    # Cargamos el dataset
+    df_train_raw = pd.read_csv(settings.DATA_PATH / "aidtec" / 'train.csv', index_col=0)
+    return df_train_raw
+
+@pytest.fixture(scope="session")
 def trainer_bad_preprocessor():
     trainer = Trainer(
         nombre_desafio="whatever",

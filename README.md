@@ -32,6 +32,13 @@ Para que el entrenamiento se realice correctamente hay que añadir los parámetr
 
 Este es el esquema a seguir:
 
+*Nota:* Quizá sea mejor idea lo siguiente:
+- Objeto DataParser que se inicializá solo con el nombre del desafio y que sea encargado de abrir un toml y retornar un dict como el de abajo con los datos correctos para alimentar al trainer y al predictor.
+- Para el data_preprocessing, poner en "preprocesador" el nombre del objeto de transformacion, que deberá heredar de TransformerMixin y que deberá estar en la carpeta data_processing/nombre_desafio_transformer.py. Pero cómo inicializamos dicho transformer desde el toml ? -> si tenemos que añadir reglas se complica
+- Crear un archivo de configuración toml con ['nombre desafio'] y debajo los parámetros de configuración.
+- Para el train_dataset quizá simplemente indicar si hace falta index_col
+- Cómo hacemos a partir del toml la carga del modelo con los parámetros adecuados ?
+
 ```python
 CONFIG_DICT = {
     "aidtec": {
@@ -64,8 +71,6 @@ Esto ejecutará el script `train.py` en la carpeta **ml/training** con el nombre
 
 Es importante que el nombre del desafío coincida con el establecido en el archivo `desafios_settings.py`. Todos los datos del entrenamiento serán extraido de ahi.
 
-
-## Predecir
 
 ----
 

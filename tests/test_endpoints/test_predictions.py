@@ -1,10 +1,15 @@
 """Módulo para los tests del endpoint /predict"""
 
+from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 import numpy as np
 import pytest
 
+from mlhomeserver.exceptions import PreProcessorError, MissingCompetitionFolderError
+from mlhomeserver.ml.data_processing.aidtec_transformer import WineDatasetTransformer
+from mlhomeserver.ml.predicting.predictor import Predictor
 import mlhomeserver.settings as settings
 
 @pytest.mark.localtest
@@ -70,3 +75,49 @@ def test_predict_with_csv_wrong_endpoint(client):
             files={"file": ("filename.csv", file, "text/csv")}
         )
     assert response.status_code == 404
+
+def test_predictor_class_init_with_valid_args():
+    from mlhomeserver.settings import LABEL_ENCODER_SUFFIX_NAME, MODEL_SUFFIX_NAME
+
+    mock_dict = {
+        "label_col_name": "calidad",
+        "preprocesador": "WineDatasetTransformer",
+    }
+    p = Predictor(
+        nombre_desafio="aidtec",  # Viene del usuario
+        dataset="dataframe_Aidtec",  # Viene del usuario
+        **mock_dict
+    )
+    assert p.nombre == "aidtec"
+    assert p.dataset == "dataframe_Aidtec"
+    assert p.label_col_name == "calidad"
+    assert p.preprocesador == "WineDatasetTransformer"
+    assert p._nombre_label_encoder == "aidtec_" + LABEL_ENCODER_SUFFIX_NAME
+    assert p._nombre_modelo == "aidtec_" + MODEL_SUFFIX_NAME
+
+def test_predictor_class_bad_preprocesor():
+    mock_dict = {
+        "label_col_name": "calidad",
+        "preprocesador": object(),  # No es un TransformerMixin
+    }
+    p = Predictor(
+        nombre_desafio="aidtec",  # Viene del usuario
+        dataset="dataframe_Aidtec",  # Viene del usuario
+        **mock_dict
+    )
+
+    with pytest.raises(PreProcessorError):
+        p.run()
+
+@pytest.mark.localtest
+def test_no_folder_model(train_aidtec_raw):
+    p = Predictor(
+        nombre_desafio="aidtec",
+        dataset=train_aidtec_raw,
+        label_col_name="calidad",
+        preprocesador=WineDatasetTransformer()
+    )
+
+    with patch('mlhomeserver.settings.MODELS_FOLDER', Path('NO_EXISTE')):
+        with pytest.raises(MissingCompetitionFolderError):
+            p.run()

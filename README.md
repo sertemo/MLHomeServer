@@ -193,7 +193,7 @@ Para ejecutar en modo producción:
 $ ./start.sh
 ```
 
-## Peticiones a la API
+## Uso de la API
 Para hacer request de momento funcionan los siguientes endpoints:
 
 - GET http://www.trymlmodels.com:5000 > mensaje bienvenida
@@ -202,7 +202,7 @@ Para hacer request de momento funcionan los siguientes endpoints:
 - GET http://www.trymlmodels.com:5000/desafio/model > devuelve info del modelo
 
 ## Agradecimientos
-Special thanks to **Miguel Zubiaga** *aka _mz* por ayudarme a montar este mini proyecto.
+Special thanks to [**Miguel Zubiaga**](https://www.mzubiaga.net/) por ayudarme a montar este mini proyecto.
 
 ## Licencia
 Copyright 2024 Sergio Tejedor Moreno

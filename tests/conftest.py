@@ -20,6 +20,7 @@ import pytest
 from unittest.mock import patch
 
 from mlhomeserver.main import app
+from mlhomeserver.config import CONFIG_DICT
 import mlhomeserver.settings as settings
 from mlhomeserver.ml.training.trainer import Trainer
 
@@ -27,11 +28,18 @@ from mlhomeserver.ml.training.trainer import Trainer
 def client():
     return TestClient(app)
 
+# TODO Susceptible de cambiar
+@pytest.fixture(scope="session")
+def aidtec_competition_data():
+    return CONFIG_DICT['aidtec']
+
+
 @pytest.fixture(scope="session")
 def train_aidtec_raw():
     # Cargamos el dataset
     df_train_raw = pd.read_csv(settings.DATA_PATH / "aidtec" / 'train.csv', index_col=0)
     return df_train_raw
+
 
 @pytest.fixture(scope="session")
 def trainer_bad_preprocessor():
@@ -47,6 +55,7 @@ def trainer_bad_preprocessor():
     )
     return trainer
 
+
 @pytest.fixture(scope="session")
 def trainer_bad_dataframe():
     trainer = Trainer(
@@ -58,6 +67,7 @@ def trainer_bad_dataframe():
         label_encoder=True,
     )
     return trainer
+
 
 @pytest.fixture
 def mock_trainer():  # Patchearlo donde SE USA, NO donde se define

@@ -1,6 +1,6 @@
 # ML Home Server
 ### v0.1.0
-![Tests](https://github.com/sertemo/EarthQuakeLocator/actions/workflows/tests.yml/badge.svg)
+![Tests](https://github.com/sertemo/MLHomeServer/actions/workflows/tests.yml/badge.svg)
 [![codecov](https://codecov.io/gh/sertemo/MLHomeServer/graph/badge.svg?token=6N7LBN76A2)](https://codecov.io/gh/sertemo/MLHomeServer)
 ![Dependabot](https://img.shields.io/badge/dependabot-enabled-blue.svg?logo=dependabot)
 ![GitHub](https://img.shields.io/github/license/sertemo/EarthQuakeLocator)

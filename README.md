@@ -11,7 +11,7 @@
 ![MyPy](https://img.shields.io/badge/type%20checker-mypy-blue.svg)
 ----
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
-![Poetry]([https://img.shields.io/badge/manager-poetry-blue.svg](https://img.shields.io/badge/Poetry-60A5FA?style=for-the-badge&logo=python&logoColor=white))
+![Poetry](https://img.shields.io/badge/Poetry-60A5FA?style=for-the-badge&logo=python&logoColor=white)
 
 ## Descripción
 Pequeño proyecto para montar un servidor en el ordenador Samsung del 2011 con **Xubuntu**.

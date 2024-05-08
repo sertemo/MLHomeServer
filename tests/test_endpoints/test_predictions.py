@@ -6,6 +6,7 @@ import mlhomeserver.settings as settings
 def test_predict_with_csv_aidtec(client):
     try:
         # Suponiendo que 'example.csv' es un archivo válido para pruebas
+        print((settings.DATA_PATH / "aidtec" / "test.csv"))
         with open(settings.DATA_PATH / "aidtec" / "test.csv", 'rb') as file:
             response = client.post(
                 "/predict/aidtec",

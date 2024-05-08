@@ -16,8 +16,10 @@
 
 from pathlib import Path
 
-MODELS_FOLDER = Path("models")
-DATA_PATH = Path("data")
+# Esto asumirá que DATA_PATH debe ser un directorio relativo al directorio del proyecto
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_PATH = BASE_DIR / "data"
+MODELS_FOLDER = BASE_DIR / "models"
 MODEL_SUFFIX_NAME = "model.joblib"
 LABEL_ENCODER_SUFFIX_NAME = "labelencoder.joblib"
 

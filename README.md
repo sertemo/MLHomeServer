@@ -3,30 +3,22 @@
 ![Tests](https://github.com/sertemo/MLHomeServer/actions/workflows/tests.yml/badge.svg)
 [![codecov](https://codecov.io/gh/sertemo/MLHomeServer/graph/badge.svg?token=6N7LBN76A2)](https://codecov.io/gh/sertemo/MLHomeServer)
 ![Dependabot](https://img.shields.io/badge/dependabot-enabled-blue.svg?logo=dependabot)
-![GitHub](https://img.shields.io/github/license/sertemo/EarthQuakeLocator)
+![GitHub](https://img.shields.io/github/license/sertemo/MLHomeServer)
+----
 ![Pytest](https://img.shields.io/badge/testing-pytest-blue.svg)
-![Black](https://img.shields.io/badge/code%20style-black-000000.svg)
+![Black](https://img.shields.io/badge/code%20style-blue-000000.svg)
 ![Flake8](https://img.shields.io/badge/linter-flake8-blue.svg)
 ![MyPy](https://img.shields.io/badge/type%20checker-mypy-blue.svg)
 ----
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
+![Poetry](https://img.shields.io/badge/manager-poetry-blue.svg)
 
 ## Descripción
-Pequeño proyecto para montar un servidor en el ordenador Samsung del 2011 con Xubuntu.
+Pequeño proyecto para montar un servidor en el ordenador Samsung del 2011 con **Xubuntu**.
 
 La idea es poder utilizarlo como API para hacer predicciones con modelos de ML y devolver dichas predicciones.
 
 Este proyecto ofrece además la posibilidad de entrenar modelos.
-
-## Construido con
-### API
-
-
-### Tests
-- Flake8
-- Mypy
-- Pytest
-- Black
 
 ### Gestor dependencias y env
 - Poetry

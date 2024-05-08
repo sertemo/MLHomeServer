@@ -20,9 +20,6 @@ La idea es poder utilizarlo como API para hacer predicciones con modelos de ML y
 
 Este proyecto ofrece además la posibilidad de entrenar modelos.
 
-### Gestor dependencias y env
-- Poetry
-
 ## Entrenar un modelo localmente
 ### 1. Configurar el archivo config.py dentro de src/mlhomeserver
 Antes de entrenar un modelo hay que definir el desafío y los parámetros necesarios para el entrenamiento.

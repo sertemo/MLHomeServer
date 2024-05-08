@@ -4,7 +4,12 @@
 [![codecov](https://codecov.io/gh/sertemo/MLHomeServer/graph/badge.svg?token=6N7LBN76A2)](https://codecov.io/gh/sertemo/MLHomeServer)
 ![Dependabot](https://img.shields.io/badge/dependabot-enabled-blue.svg?logo=dependabot)
 ![GitHub](https://img.shields.io/github/license/sertemo/EarthQuakeLocator)
-
+![Pytest](https://img.shields.io/badge/testing-pytest-blue.svg)
+![Black](https://img.shields.io/badge/code%20style-black-000000.svg)
+![Flake8](https://img.shields.io/badge/linter-flake8-blue.svg)
+![MyPy](https://img.shields.io/badge/type%20checker-mypy-blue.svg)
+----
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
 
 ## Descripción
 Pequeño proyecto para montar un servidor en el ordenador Samsung del 2011 con Xubuntu.
@@ -15,7 +20,7 @@ Este proyecto ofrece además la posibilidad de entrenar modelos.
 
 ## Construido con
 ### API
-![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
+
 
 ### Tests
 - Flake8

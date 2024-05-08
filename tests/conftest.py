@@ -17,6 +17,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 import pandas as pd
 import pytest
+from unittest.mock import patch
 
 from mlhomeserver.main import app
 import mlhomeserver.settings as settings
@@ -51,3 +52,8 @@ def trainer_bad_dataframe():
         label_encoder=True,
     )
     return trainer
+
+@pytest.fixture
+def mock_trainer():  # Patchearlo donde SE USA, NO donde se define
+    with patch('mlhomeserver.ml.training.train.Trainer') as TrainerMock:
+        yield TrainerMock

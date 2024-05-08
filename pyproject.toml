@@ -56,3 +56,6 @@ testpaths = [
    "tests",
 ]
 pythonpath = ["src"]
+markers = [
+   "localtest: solo tests en local",
+]

@@ -27,7 +27,7 @@ def predict(nombre_desafio: str, dataset_predecir: pd.DataFrame) -> NDArray[np.i
     """Devuelve las predicciones utilizando el Predictor"""
     predictor = Predictor(
         nombre_desafio=nombre_desafio,
-        dataset=dataset_predecir,
+        dataset=dataset_predecir,  # TODO Cambiar por data parser
         label_col_name=dsettings.CONFIG_DICT[nombre_desafio]["label_col_name"],
         preprocesador=dsettings.CONFIG_DICT[nombre_desafio]["preprocesador"],
     )

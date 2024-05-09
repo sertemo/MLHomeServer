@@ -1,6 +1,7 @@
 aidtec:
-  train_dataset_filename: "train.csv"  # Dentro de data/aidtec en este caso
-  label_col_name: "calidad"
+  dataset:
+    filename: "train.csv"  # Dentro de data/aidtec en este caso
+    label_col_name: "calidad"
   preprocesador:
     class_name: "WineDatasetTransformer"  # Dentro de data_processing/aidtec_transformer.py en este caso
     params:

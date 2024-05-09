@@ -81,3 +81,14 @@ class NotFoundTrainDFError(Exception):
     Exception : _type_
         _description_
     """
+
+
+class DataConfigError(Exception):
+    """Error al abrir el archivo yml
+    de configuración de los desafíos
+
+    Parameters
+    ----------
+    Exception : _type_
+        _description_
+    """

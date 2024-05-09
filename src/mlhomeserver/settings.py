@@ -17,11 +17,13 @@
 from pathlib import Path
 
 # Esto asumirá que DATA_PATH debe ser un directorio relativo al directorio del proyecto
-# BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_PATH = Path("data")
 MODELS_FOLDER = Path("models")
 MODEL_SUFFIX_NAME = "model.joblib"
 LABEL_ENCODER_SUFFIX_NAME = "labelencoder.joblib"
+
+# Archivo de configuración de desafíos
+CONFIG_FILE = "config.yml"
 
 # Training
 SPLITS_FOR_CV = 5

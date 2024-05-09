@@ -23,6 +23,7 @@ from mlhomeserver.main import app
 from mlhomeserver.config import CONFIG_DICT
 import mlhomeserver.settings as settings
 from mlhomeserver.ml.training.trainer import Trainer
+from mlhomeserver.parser import DataParser
 
 @pytest.fixture(scope="session")
 def client():
@@ -58,6 +59,11 @@ def trainer_bad_preprocessor():
         label_encoder=True,
     )
     return trainer
+
+
+@pytest.fixture(scope="session")
+def aidtec_dataparser():
+    return DataParser("aidtec")
 
 
 @pytest.fixture(scope="session")

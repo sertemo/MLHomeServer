@@ -44,7 +44,8 @@ class Training:
 
         nombre_desafio = args.desafio
         trainer = Trainer(
-            nombre_desafio=nombre_desafio, **config.CONFIG_DICT[nombre_desafio]
+            nombre_desafio=nombre_desafio,
+            **config.CONFIG_DICT[nombre_desafio],  # TODO Cambiar por dataparser
         )
         try:
             trainer.run()

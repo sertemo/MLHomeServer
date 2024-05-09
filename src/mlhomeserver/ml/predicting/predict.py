@@ -18,16 +18,21 @@ import numpy as np
 from numpy.typing import NDArray
 import pandas as pd
 
+import mlhomeserver.config as dsettings
 from mlhomeserver.exceptions import PredictionRunError
 from mlhomeserver.ml.predicting.predictor import Predictor
-import mlhomeserver.config as dsettings
+from mlhomeserver.parser import DataParser
 
 
-def predict(nombre_desafio: str, dataset_predecir: pd.DataFrame) -> NDArray[np.int_]:
+def predict(
+    nombre_desafio: str, dataset_predecir: pd.DataFrame, data_parser: DataParser
+) -> NDArray[np.int_]:
     """Devuelve las predicciones utilizando el Predictor"""
+    # ! Borrar. Pasarle al Predictor la instancia de data_parser
+    print(data_parser)
     predictor = Predictor(
         nombre_desafio=nombre_desafio,
-        dataset=dataset_predecir,  # TODO Cambiar por data parser
+        dataset=dataset_predecir,  # TODO PAsarle la instancia del dataparser ? o no
         label_col_name=dsettings.CONFIG_DICT[nombre_desafio]["label_col_name"],
         preprocesador=dsettings.CONFIG_DICT[nombre_desafio]["preprocesador"],
     )

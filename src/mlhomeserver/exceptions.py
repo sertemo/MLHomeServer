@@ -62,6 +62,29 @@ class PreProcessorError(Exception):
     """Cuando el preprocesado da error"""
 
 
+class NonValidPreProcessor(Exception):
+    """Preprocesador no válido
+    porque no incorpora el método
+    fit_transform
+
+    Parameters
+    ----------
+    Exception : _type_
+        _description_
+    """
+
+
+class PreProcessorModuleLoadError(Exception):
+    """Cuando se intenta cargar el módulo donde
+    está el preprocesador y da error
+
+    Parameters
+    ----------
+    Exception : _type_
+        _description_
+    """
+
+
 class MissingCompetitionFolderError(Exception):
     """Se lanza cuando al predecir, no existe la carpeta
     con el modelo para ese desafío"""

@@ -2,6 +2,8 @@ aidtec:
   dataset:
     filename: "train.csv"  # Dentro de data/aidtec en este caso
     label_col_name: "calidad"
+    params:
+      index_col: 0
   preprocesador:
     class_name: "WineDatasetTransformer"  # Dentro de data_processing/aidtec_transformer.py en este caso
     params:
@@ -12,6 +14,7 @@ aidtec:
         - "densidad"
         - "dioxido de azufre libre"
   modelo:
+    type: "sklearn.base"  # poner el módulo en el que se encuentra el modelo
     class_name: "RandomForestClassifier"
     params:
       n_estimators: 900

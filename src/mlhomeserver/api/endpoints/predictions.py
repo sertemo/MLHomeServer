@@ -20,9 +20,10 @@ from fastapi import File, UploadFile, HTTPException, status
 import pandas as pd
 
 
-from mlhomeserver.ml.predicting.predict import predict
-import mlhomeserver.config as config
 from mlhomeserver.api.schemas import CustomResponse, Prediction
+import mlhomeserver.config as config
+from mlhomeserver.ml.predicting.predict import predict
+from mlhomeserver.parser import DataParser
 
 router = APIRouter(responses={404: {"error": "No encontrado"}})
 
@@ -40,7 +41,7 @@ async def predicciones(nombre_desafio: str, file: UploadFile = File(...)):
             detail="Debes enviar un archivo *.csv",
         )
 
-    if nombre_desafio not in config.CONFIG_DICT:
+    if nombre_desafio not in config.CONFIG_DICT:  # TODO Cambiar esto con el yml
         print(f"Nombre de desafío no válido: {nombre_desafio}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -51,7 +52,10 @@ async def predicciones(nombre_desafio: str, file: UploadFile = File(...)):
     # Abrimos el dataframe
     # La primera columna es el índice
     try:
-        data_frame = pd.read_csv(file.file, index_col=0)
+        # Usamos el parser para pasarle los mismos parámetros
+        # al dataset y pasarlo al Predictor
+        dp = DataParser(nombre_desafio)
+        data_frame = pd.read_csv(file.file, **dp.get_dataset_params())
     except pd.errors.EmptyDataError as e:
         print("DEBUG:", e)
         raise HTTPException(
@@ -73,7 +77,9 @@ async def predicciones(nombre_desafio: str, file: UploadFile = File(...)):
 
     # Lanzamos predicciones
     try:
-        preds = predict(nombre_desafio=nombre_desafio, dataset_predecir=data_frame)
+        preds = predict(
+            nombre_desafio=nombre_desafio, dataset_predecir=data_frame, data_parser=dp
+        )  # Dependency injection
     except Exception as e:
         print("DEBUG:", e)
         raise HTTPException(

@@ -23,7 +23,11 @@ import pandas as pd
 from pathlib import Path
 from sklearn.base import TransformerMixin
 
-from mlhomeserver.exceptions import DataConfigError
+from mlhomeserver.exceptions import (
+    DataConfigError,
+    PreProcessorModuleLoadError,
+    NonValidPreProcessor,
+)
 from mlhomeserver.settings import CONFIG_FILE
 
 
@@ -75,16 +79,66 @@ class DataParser:
         else:
             return config
 
+    def _validate_preprocessor(self, preprocessor: TransformerMixin) -> None:
+        """Valida el preprocesador
+
+        Parameters
+        ----------
+        preprocessor : TransformerMixin
+            _description_
+
+        Raises
+        ------
+        NonValidPreProcessor
+            Si no incorpora el método fit_transform
+        """
+        if not hasattr(preprocessor, "fit_transform"):
+            msg = "El preprocesador no incorpora un método fit_transform."
+            print(msg)
+            raise NonValidPreProcessor(msg)
+
     def _get_preprocessor_module(self) -> str:
+        """Devuelve el módulo completo de la ubicación
+        del preprocesador
+
+        Returns
+        -------
+        str
+            _description_
+        """
         preprocessor_module_name = "".join([self.challenge_name, "_", "transformer"])
         return ".".join(
             [self.root_path.name, "ml", "data_processing", preprocessor_module_name]
         )
 
+    def get_dataset_params(self) -> dict[str, Any]:
+        """Devuelve los parámetros para pasar
+        a pandas al abrir el archivo csv
+
+        Returns
+        -------
+        dict[str, Any]
+            _description_
+        """
+        params: dict[str, Any] = self.config["dataset"].get("params", dict())
+        return params
+
+    def get_preprocessor_params(self) -> dict[str, Any]:
+        """Devuelve todos los parámetros del
+        preprocesador
+
+        Returns
+        -------
+        dict[str, Any]
+            _description_
+        """
+        params: dict[str, Any] = self.config["preprocesador"].get("params", dict())
+        return params
+
     def get_train_dataset(self) -> pd.DataFrame:
         self.dataset_path = Path("data") / self.challenge_name / self.dataset_name
         print("path dataset", self.dataset_path)
-        params = self.config["dataset"].get("params", dict())
+        params = self.get_dataset_params()
         print("params", params)
         return pd.read_csv(self.dataset_path, **params)
 
@@ -93,13 +147,22 @@ class DataParser:
         print("transformer name:", transformer_name)
         preprocessor_module = self._get_preprocessor_module()
         print("módulo preprocesador:", preprocessor_module)
-        mod = importlib.import_module(preprocessor_module)
+        try:
+            mod = importlib.import_module(preprocessor_module)
+        except Exception as e:
+            msg = f"Se ha producido un error al cargar el módulo del preprocesador: {e}"
+            print(msg)
+            raise PreProcessorModuleLoadError(msg)
         print("mod", mod)
-        preprocessor = getattr(mod, transformer_name)
-        params = self.config["preprocesador"].get("params", dict())
+        preprocessor: TransformerMixin = getattr(mod, transformer_name)
+        # Validamos que sea un preprocesador válido
+        self._validate_preprocessor(preprocessor)
+        params = self.get_preprocessor_params()
         return preprocessor(**params)
 
     def get_model(self):
+        # TODO igual mejor especificar en el yml si es custom o de qué tipo
+        # TODO Buscar si es objeto de sklearn, sino buscar en carpeta ml/models/nombre_desafio_model.py
         module_name, class_name = self.config["modelo"]["class_name"].rsplit(".", 1)
         mod = importlib.import_module(module_name)
         clazz = getattr(mod, class_name)

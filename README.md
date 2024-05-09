@@ -24,11 +24,42 @@ Este proyecto ofrece además la posibilidad de entrenar modelos.
 ### 1. Configurar el archivo config.py dentro de src/mlhomeserver
 Antes de entrenar un modelo hay que definir el desafío y los parámetros necesarios para el entrenamiento.
 
-Se presupone que ya se han hecho las pruebas pertinentes, el análisis exploratorio para el desafío en los notebooks pertinentes.
+Se presupone que ya se han hecho las pruebas pertinentes y el análisis exploratorio para el desafío en los notebooks.
 
 El objetivo del entrenamiento manual es tener alojado en el contexto del proyecto el modelo para lanzar las predicciones.
 
-Para que el entrenamiento se realice correctamente hay que añadir los parámetros al diccionario `CONFIG_DICT` dentro de **src/mlhomeserver**.
+Para que el entrenamiento se realice correctamente hay que añadir los parámetros del dataset, del preprocesador del dataset y del modelo al archivo `config.yml` en la raiz principal del proyecto.
+
+El esquema del archivo es el siguiente:
+
+```yml
+nombre_desafio:  # El nombre del desafío en cuestión
+  dataset:
+    filename: "train.csv"  # Nombre del archivo de train dentro de data/nombre_desafio
+    label_col_name: "target"  # Nombre de la columna de los targets
+    params:  # Parámetros a pasar al 'read_csv' para abrir correctamente el dataframe
+      index_col: 0  # El dataframe tiene su primera columna como índice
+  preprocesador:
+    class_name: "CustomTransformer"  # Dentro de data_processing/nombre_desafio_transformer.py en este caso
+    params:  # Estos serán los parámetros a pasar al preprocesador
+      parametro1:
+        - "1"
+        - "2"
+        - "3"
+      parametro2:
+        - "objeto1"
+        - "objeto2"
+  modelo:
+    type: "modulo.modelo"  # El módulo en el que se encuentra el modelo (tanto custom como de terceros)
+    class_name: "Modelo"  # Debe ser un modelo 
+    params:
+      n_estimators: 900
+      random_state: 42
+  label_encoder: true
+```
+
+**Notas importantes**
+- El **preprocesador** debe tener un método **fit_transform** o heredar de `TransformerMixin` del módulo `sklearn.base`.
 
 Este es el esquema a seguir:
 
@@ -58,6 +89,8 @@ CONFIG_DICT = {
     },
 }
 ```
+
+
 
 
 ### 2. Ejecutar train.sh

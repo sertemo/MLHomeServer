@@ -22,7 +22,7 @@ import pandas as pd
 
 from mlhomeserver.ml.predicting.predict import predict
 import mlhomeserver.config as config
-from mlhomeserver.schemas import CustomResponse, Prediction
+from mlhomeserver.api.schemas import CustomResponse, Prediction
 
 router = APIRouter(responses={404: {"error": "No encontrado"}})
 

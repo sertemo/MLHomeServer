@@ -20,7 +20,7 @@ from fastapi import APIRouter, status
 
 from mlhomeserver.ml.utilities.helpers import load_model
 from mlhomeserver.ml.utilities.wrappers import SerializableClassifier
-from mlhomeserver.schemas import CustomResponse, ModelInfo
+from mlhomeserver.api.schemas import CustomResponse, ModelInfo
 
 router = APIRouter(responses={404: {"mensaje": "No encontrado"}}, tags=["predict"])
 

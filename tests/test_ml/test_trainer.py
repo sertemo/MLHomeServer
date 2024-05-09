@@ -1,16 +1,22 @@
 
+import pandas as pd
 import pytest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from mlhomeserver.ml.training.train import Training
-from mlhomeserver.exceptions import PreProcessorError, NonValidDataset
+from mlhomeserver.exceptions import PreProcessorError, NonValidDataset, NotFoundTrainDFError
 
 def test_trainer_bad_preprocessor_aidtec(trainer_bad_preprocessor):
     with pytest.raises(PreProcessorError):
         trainer_bad_preprocessor.run()
 
-def test_trainer_dataset_with_no_target(trainer_bad_dataframe):
-    with pytest.raises(NonValidDataset):
+def test_trainer_no_labels_dataframe_aidtec(trainer_bad_preprocessor):
+    with patch('mlhomeserver.ml.training.trainer.Trainer._open_dt', return_value=pd.DataFrame()):
+        with pytest.raises(NonValidDataset):
+            trainer_bad_preprocessor.run()
+
+def test_trainer_dataset_doesnot_exists(trainer_bad_dataframe):
+    with pytest.raises(NotFoundTrainDFError):
         trainer_bad_dataframe.run()
 
 def test_train_function_calls_run(mock_trainer):
@@ -24,4 +30,6 @@ def test_train_function_calls_run(mock_trainer):
     t.train()
 
     trainer_mock.run.assert_called_once()
+
+
 

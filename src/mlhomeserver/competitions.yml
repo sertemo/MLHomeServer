@@ -1,0 +1,18 @@
+aidtec:
+  train_dataset_filename: "train.csv"  # Dentro de data/aidtec en este caso
+  label_col_name: "calidad"
+  preprocesador:
+    class_name: "WineDatasetTransformer"  # Dentro de data_processing/aidtec_transformer.py en este caso
+    params:
+      drop_columns:
+        - "year"
+        - "color"
+        - "alcohol"
+        - "densidad"
+        - "dioxido de azufre libre"
+  modelo:
+    class_name: "RandomForestClassifier"
+    params:
+      n_estimators: 900
+      random_state: 42
+  label_encoder: true

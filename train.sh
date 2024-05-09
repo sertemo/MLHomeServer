@@ -20,6 +20,17 @@ if [ ! -f "$SCRIPT_PATH" ]; then
     exit 2
 fi
 
+# Determinar el comando de Python disponible
+if command -v python3 &>/dev/null; then
+    PYTHON_CMD="python3"
+elif command -v python &>/dev/null; then
+    PYTHON_CMD="python"
+else
+    echo "Python no está instalado."
+    exit 3
+fi
+
 # Ejecutar el script de Python pasando el desafío como argumento
 # echo "Ejecutando el entrenamiento para el desafío: $DESAFIO"
-python3 $SCRIPT_PATH $DESAFIO
+$PYTHON_CMD $SCRIPT_PATH $DESAFIO
+

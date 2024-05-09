@@ -70,3 +70,14 @@ class MissingCompetitionFolderError(Exception):
 class PredictionRunError(Exception):
     """Cuando el método run del predictor
     da error"""
+
+
+class NotFoundTrainDFError(Exception):
+    """Cuando no se encuentra el dataset
+    train especificado
+
+    Parameters
+    ----------
+    Exception : _type_
+        _description_
+    """

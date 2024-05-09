@@ -27,7 +27,11 @@ from sklearn.model_selection import (
     cross_val_predict,
 )
 
-from mlhomeserver.exceptions import PreProcessorError, NonValidDataset
+from mlhomeserver.exceptions import (
+    PreProcessorError,
+    NonValidDataset,
+    NotFoundTrainDFError,
+)
 from mlhomeserver.ml.utilities.wrappers import (
     SerializableClassifier,
     SerializableTransformer,
@@ -39,24 +43,58 @@ class Trainer:
     def __init__(
         self,
         nombre_desafio: str,
-        train_dataset: pd.DataFrame,
+        train_dataset_filename: str,
         label_col_name: str,
         preprocesador: TransformerMixin,
         modelo: ClassifierMixin,
         label_encoder: bool = False,
+        train_dataset_index_col: int = 0,
     ) -> None:
         self.nombre = nombre_desafio
-        self.dataset = train_dataset
+        self.train_dataset_filename = train_dataset_filename
         self.label_col_name = label_col_name
         self.preprocesador = preprocesador
         self.modelo = modelo
         self.label_encoder = label_encoder
+        self.index_col = train_dataset_index_col
+
+    def _open_dt(self, ruta_train_df: Path) -> pd.DataFrame:
+        """Abre el Dataframe de train
+        del desafío correspondiente
+
+        Returns
+        -------
+        pd.DataFrame
+            _description_
+        """
+        return pd.read_csv(ruta_train_df, index_col=self.index_col)
+
+    def _preprocess(self) -> pd.DataFrame:
+        """Ejecuta el preprocesamiento
+
+        Returns
+        -------
+        pd.DataFrame
+            _description_
+        """
+        df_preprocessed: pd.DataFrame = self.preprocesador.fit_transform(self.dataset)
+        return df_preprocessed
 
     def run(self) -> None:
         """Ejecuta la Pipeline de preproceso
         y entrenamiento guardando el modelo
         y el label encoder en caso de haberlo"""
         start = time.perf_counter()
+
+        # Comprobamos que existe el dataset en data/nombre_desafio
+        ruta_train_df = settings.DATA_PATH / self.nombre / self.train_dataset_filename
+        if not ruta_train_df.exists():
+            msg = f"No existe el dataset para entrenar especificado: {ruta_train_df}"
+            print(msg)
+            raise NotFoundTrainDFError(msg)
+
+        # Abrimos el dataset
+        self.dataset: pd.DataFrame = self._open_dt(ruta_train_df)
 
         # Comprobamos que el dataset tenga la columna target
         if self.label_col_name not in self.dataset:
@@ -65,9 +103,7 @@ class Trainer:
             )
         # Preprocesamos
         try:
-            df_preprocessed: pd.DataFrame = self.preprocesador.fit_transform(
-                self.dataset
-            )
+            df_preprocessed: pd.DataFrame = self._preprocess()
         except Exception as e:
             raise PreProcessorError(f"Se ha producido un error al preprocesar: {e}")
 

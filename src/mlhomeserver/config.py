@@ -14,18 +14,15 @@
 
 """Módulo con las diferentes configuraciones de cada desafío"""
 
-import pandas as pd
+
 from sklearn.ensemble import RandomForestClassifier
 
-import mlhomeserver.settings as settings
 from mlhomeserver.ml.data_processing.aidtec_transformer import WineDatasetTransformer
 
 CONFIG_DICT = {
     "aidtec": {
+        "train_dataset_filename": "train.csv",  # En data/aidtec
         "label_col_name": "calidad",
-        "train_dataset": pd.read_csv(
-            settings.DATA_PATH / "aidtec" / "train.csv", index_col=0
-        ),
         "preprocesador": WineDatasetTransformer(
             drop_columns=[
                 "year",

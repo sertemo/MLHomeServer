@@ -40,15 +40,19 @@ def train_aidtec_raw():
     df_train_raw = pd.read_csv(settings.DATA_PATH / "aidtec" / 'train.csv', index_col=0)
     return df_train_raw
 
+@pytest.fixture(scope="session")
+def train_aidtec_raw_no_label_col():
+    # Cargamos el dataset
+    df_train_raw = pd.read_csv(settings.DATA_PATH / "aidtec" / 'train.csv', index_col=0)
+    return df_train_raw.drop(columns=['calidad'])
 
 @pytest.fixture(scope="session")
 def trainer_bad_preprocessor():
     trainer = Trainer(
-        nombre_desafio="whatever",
+        nombre_desafio="aidtec",
         label_col_name="calidad",
-        train_dataset=pd.read_csv(
-            settings.DATA_PATH / "aidtec" / "train.csv", index_col=0
-        ),
+        train_dataset_filename="train.csv",
+        train_dataset_index_col=0,
         preprocesador=object(),
         modelo=object(),
         label_encoder=True,
@@ -61,13 +65,24 @@ def trainer_bad_dataframe():
     trainer = Trainer(
         nombre_desafio="whatever",
         label_col_name="calidad",
-        train_dataset=pd.DataFrame(),
+        train_dataset_filename="train_que_no_existe.csv",
         preprocesador=object(),
         modelo=object(),
         label_encoder=True,
     )
     return trainer
 
+@pytest.fixture(scope="session")
+def trainer_bad_label_col_namee():
+    trainer = Trainer(
+        nombre_desafio="aidtec",
+        label_col_name="calidad",
+        train_dataset_filename="train.csv",
+        preprocesador=object(),
+        modelo=object(),
+        label_encoder=True,
+    )
+    return trainer
 
 @pytest.fixture
 def mock_trainer():  # Patchearlo donde SE USA, NO donde se define

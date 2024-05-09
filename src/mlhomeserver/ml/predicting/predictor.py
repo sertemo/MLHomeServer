@@ -19,7 +19,6 @@ from numpy.typing import NDArray
 from pathlib import Path
 
 import pandas as pd
-from sklearn.base import TransformerMixin
 
 from mlhomeserver.ml.utilities.wrappers import (
     SerializableClassifier,
@@ -28,6 +27,7 @@ from mlhomeserver.ml.utilities.wrappers import (
 from mlhomeserver.exceptions import PreProcessorError, MissingCompetitionFolderError
 from mlhomeserver.ml.utilities.helpers import load_model
 import mlhomeserver.settings as settings
+from mlhomeserver.parser import DataParser
 
 
 class Predictor:
@@ -37,13 +37,13 @@ class Predictor:
         self,
         nombre_desafio: str,
         dataset: pd.DataFrame,
-        label_col_name: str,
-        preprocesador: TransformerMixin,
+        data_parser: DataParser,
     ) -> None:
         self.nombre = nombre_desafio
         self.dataset = dataset
-        self.label_col_name = label_col_name
-        self.preprocesador = preprocesador
+        self.dp = data_parser
+        self.label_col_name = data_parser.label_col_name
+        self.preprocesador = data_parser.get_preprocessor()
         self._nombre_modelo = "".join([self.nombre, "_", settings.MODEL_SUFFIX_NAME])
         self._nombre_label_encoder = "".join(
             [self.nombre, "_", settings.LABEL_ENCODER_SUFFIX_NAME]

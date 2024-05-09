@@ -74,9 +74,31 @@ class NonValidPreProcessor(Exception):
     """
 
 
+class NonValidModel(Exception):
+    """Cuando el modelo no incorpora
+    método fit o predict
+
+    Parameters
+    ----------
+    Exception : _type_
+        _description_
+    """
+
+
 class PreProcessorModuleLoadError(Exception):
     """Cuando se intenta cargar el módulo donde
     está el preprocesador y da error
+
+    Parameters
+    ----------
+    Exception : _type_
+        _description_
+    """
+
+
+class ModelModuleLoadError(Exception):
+    """Cuando cargas el módulo del modelo
+    y da error
 
     Parameters
     ----------

@@ -21,14 +21,14 @@ La idea es poder utilizarlo como API para hacer predicciones con modelos de ML y
 Este proyecto ofrece además la posibilidad de entrenar modelos.
 
 ## Entrenar un modelo localmente
-### 1. Configurar el archivo config.py dentro de src/mlhomeserver
+### 1. Configurar el archivo de desafíos config.yml dentro de la raiz del proyecto
 Antes de entrenar un modelo hay que definir el desafío y los parámetros necesarios para el entrenamiento.
 
 Se presupone que ya se han hecho las pruebas pertinentes y el análisis exploratorio para el desafío en los notebooks.
 
 El objetivo del entrenamiento manual es tener alojado en el contexto del proyecto el modelo para lanzar las predicciones.
 
-Para que el entrenamiento se realice correctamente hay que añadir los parámetros del dataset, del preprocesador del dataset y del modelo al archivo `config.yml` en la raiz principal del proyecto.
+Para que el entrenamiento se realice correctamente hay que añadir los parámetros del **dataset**, del **preprocesador** del dataset y del **modelo** al archivo `config.yml` en la raiz principal del proyecto.
 
 El esquema del archivo es el siguiente:
 
@@ -39,7 +39,7 @@ nombre_desafio:  # El nombre del desafío en cuestión
     label_col_name: "target"  # Nombre de la columna de los targets
     params:  # Parámetros a pasar al 'read_csv' para abrir correctamente el dataframe
       index_col: 0  # El dataframe tiene su primera columna como índice
-  preprocesador:
+  preprocessor:
     class_name: "CustomTransformer"  # Dentro de data_processing/nombre_desafio_transformer.py en este caso
     params:  # Estos serán los parámetros a pasar al preprocesador
       parametro1:
@@ -49,49 +49,50 @@ nombre_desafio:  # El nombre del desafío en cuestión
       parametro2:
         - "objeto1"
         - "objeto2"
-  modelo:
+  model:
     type: "modulo.modelo"  # El módulo en el que se encuentra el modelo (tanto custom como de terceros)
     class_name: "Modelo"  # Debe ser un modelo 
+    params:
+      parametro1: 123
+      parametro2: 321
+  label_encoder: true
+```
+
+**Notas importantes**
+- Será siempre necesario hacer un preprocesador personalizado y guardarlo en **ml/data_processing/nombre_desafio_transformer.py**
+- El **preprocesador** debe tener un método `fit_transform`. o heredar de `TransformerMixin` del módulo `sklearn.base`.
+- El archivo dataset par el entrenamiento debe estar guardado en la carpeta data dentro de una carpeta con el mismo nombre del desafío: **data/nombre_desafio/**.
+- El modelo puede ser un modelo personalizado, en tal caso deberá guardarse en la carpeta **models** y especificar el módulo en el que se encuentra y su nombre en el archivo config.yml.
+- Para que sea válido el modelo debe tener los métodos `fit` y `predict`.
+- En caso de usar un modelo de una librería como por ejemplo `sklearn` es necesario también especificar el módulo desde el que hay que importarlo y su nombre.
+
+
+Un ejemplo de archivo para el desafío **aidtec** es el siguiente:
+
+```yml
+aidtec:
+  dataset:
+    filename: "train.csv"
+    label_col_name: "calidad"
+    params:
+      index_col: 0
+  preprocessor:
+    class_name: "WineDatasetTransformer"
+    params:
+      drop_columns:
+        - "year"
+        - "color"
+        - "alcohol"
+        - "densidad"
+        - "dioxido de azufre libre"
+  model:
+    type: "sklearn.ensemble"
+    class_name: "RandomForestClassifier"
     params:
       n_estimators: 900
       random_state: 42
   label_encoder: true
 ```
-
-**Notas importantes**
-- El **preprocesador** debe tener un método **fit_transform** o heredar de `TransformerMixin` del módulo `sklearn.base`.
-
-Este es el esquema a seguir:
-
-*Nota*: Quizá sea mejor idea lo siguiente:
-- Objeto DataParser que se inicializá solo con el nombre del desafio y que sea encargado de abrir un toml y retornar un dict como el de abajo con los datos correctos para alimentar al trainer y al predictor.
-- Para el data_preprocessing, poner en "preprocesador" el nombre del objeto de transformacion, que deberá heredar de TransformerMixin y que deberá estar en la carpeta data_processing/nombre_desafio_transformer.py. Pero cómo inicializamos dicho transformer desde el toml ? -> si tenemos que añadir reglas se complica
-- Crear un archivo de configuración toml con ['nombre desafio'] y debajo los parámetros de configuración.
-- Para el train_dataset quizá simplemente indicar si hace falta index_col
-- Cómo hacemos a partir del toml la carga del modelo con los parámetros adecuados ?
-
-```python
-CONFIG_DICT = {
-    "aidtec": {
-        "train_dataset_filename": "train.csv",  # En data/aidtec
-        "label_col_name": "calidad",
-        "preprocesador": WineDatasetTransformer(
-            drop_columns=[
-                "year",
-                "color",
-                "alcohol",
-                "densidad",
-                "dioxido de azufre libre",
-            ]
-        ),
-        "modelo": RandomForestClassifier(n_estimators=900, random_state=42),
-        "label_encoder": True,
-    },
-}
-```
-
-
-
 
 ### 2. Ejecutar train.sh
 ```sh

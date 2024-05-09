@@ -11,6 +11,7 @@ from mlhomeserver.exceptions import PreProcessorError, MissingCompetitionFolderE
 from mlhomeserver.ml.data_processing.aidtec_transformer import WineDatasetTransformer
 from mlhomeserver.ml.predicting.predictor import Predictor
 import mlhomeserver.settings as settings
+from mlhomeserver.parser import DataParser
 
 @pytest.mark.localtest
 def test_predict_with_csv_aidtec_only_local(client):
@@ -76,17 +77,13 @@ def test_predict_with_csv_wrong_endpoint(client):
         )
     assert response.status_code == 404
 
-def test_predictor_class_init_with_valid_args():
+def test_predictor_class_init_with_valid_args(aidtec_dataparser):
     from mlhomeserver.settings import LABEL_ENCODER_SUFFIX_NAME, MODEL_SUFFIX_NAME
 
-    mock_dict = {
-        "label_col_name": "calidad",
-        "preprocesador": "WineDatasetTransformer",
-    }
     p = Predictor(
         nombre_desafio="aidtec",  # Viene del usuario
         dataset="dataframe_Aidtec",  # Viene del usuario
-        **mock_dict
+        data_parser=aidtec_dataparser
     )
     assert p.nombre == "aidtec"
     assert p.dataset == "dataframe_Aidtec"
@@ -96,26 +93,23 @@ def test_predictor_class_init_with_valid_args():
     assert p._nombre_modelo == "aidtec_" + MODEL_SUFFIX_NAME
 
 def test_predictor_class_bad_preprocesor():
-    mock_dict = {
-        "label_col_name": "calidad",
-        "preprocesador": object(),  # No es un TransformerMixin
-    }
-    p = Predictor(
-        nombre_desafio="aidtec",  # Viene del usuario
-        dataset="dataframe_Aidtec",  # Viene del usuario
-        **mock_dict
-    )
+    dp = DataParser('aidtec')
+    with patch.object(dp, '_load_preprocessor', return_value=object()):
+        p = Predictor(
+            nombre_desafio="aidtec",  # Viene del usuario
+            dataset="dataframe_Aidtec",  # Viene del usuario
+            data_parser=dp,
+        )
 
     with pytest.raises(PreProcessorError):
         p.run()
 
 @pytest.mark.localtest
-def test_no_folder_model(train_aidtec_raw):
+def test_no_folder_model(train_aidtec_raw, aidtec_dataparser):
     p = Predictor(
         nombre_desafio="aidtec",
         dataset=train_aidtec_raw,
-        label_col_name="calidad",
-        preprocesador=WineDatasetTransformer()
+        data_parser=aidtec_dataparser
     )
 
     with patch('mlhomeserver.settings.MODELS_FOLDER', Path('NO_EXISTE')):

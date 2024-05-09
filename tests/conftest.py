@@ -20,7 +20,6 @@ import pytest
 from unittest.mock import patch
 
 from mlhomeserver.main import app
-from mlhomeserver.config import CONFIG_DICT
 import mlhomeserver.settings as settings
 from mlhomeserver.ml.training.trainer import Trainer
 from mlhomeserver.parser import DataParser
@@ -28,12 +27,6 @@ from mlhomeserver.parser import DataParser
 @pytest.fixture(scope="session")
 def client():
     return TestClient(app)
-
-# TODO Susceptible de cambiar
-@pytest.fixture(scope="session")
-def aidtec_competition_data():
-    return CONFIG_DICT['aidtec']
-
 
 @pytest.fixture(scope="session")
 def train_aidtec_raw():
@@ -52,7 +45,7 @@ def trainer_bad_preprocessor():
     trainer = Trainer(
         nombre_desafio="aidtec",
         label_col_name="calidad",
-        train_dataset_filename="train.csv",
+        train_dataset=pd.read_csv((Path('data') / 'aidtec' / 'train.csv'), index_col=0),
         train_dataset_index_col=0,
         preprocesador=object(),
         modelo=object(),
@@ -65,18 +58,6 @@ def trainer_bad_preprocessor():
 def aidtec_dataparser():
     return DataParser("aidtec")
 
-
-@pytest.fixture(scope="session")
-def trainer_bad_dataframe():
-    trainer = Trainer(
-        nombre_desafio="whatever",
-        label_col_name="calidad",
-        train_dataset_filename="train_que_no_existe.csv",
-        preprocesador=object(),
-        modelo=object(),
-        label_encoder=True,
-    )
-    return trainer
 
 @pytest.fixture(scope="session")
 def trainer_bad_label_col_namee():

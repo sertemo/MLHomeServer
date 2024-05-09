@@ -14,9 +14,11 @@
 
 """Funciones auxiliares generales para todo el proyecto"""
 
-from typing import Any
-
 import toml
+from typing import Any
+import yaml
+
+from mlhomeserver.settings import CONFIG_FILE
 
 
 def get_project_version() -> str:
@@ -26,3 +28,17 @@ def get_project_version() -> str:
         data: dict[str, Any] = toml.load(file)
         version: str = data["tool"]["poetry"]["version"]
     return version
+
+
+def get_current_competitions_from_yml() -> list[str]:
+    """Devuelve los nombres de los desafios
+    del archivo de configuracion de los yml
+
+    Returns
+    -------
+    list
+        _description_
+    """
+    with open(CONFIG_FILE, "r") as file:
+        archivo_config: dict[str, Any] = yaml.safe_load(file)
+    return list(archivo_config.keys())

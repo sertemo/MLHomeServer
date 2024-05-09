@@ -19,7 +19,8 @@
 import argparse
 
 from mlhomeserver.ml.training.trainer import Trainer
-import mlhomeserver.config as config
+from mlhomeserver.parser import DataParser
+from mlhomeserver.utils import get_current_competitions_from_yml
 
 
 class Training:
@@ -31,7 +32,7 @@ class Training:
         parser.add_argument(
             "desafio",
             help="Nombre del desafío",
-            choices=config.CONFIG_DICT.keys(),
+            choices=get_current_competitions_from_yml(),
             type=str,
         )
         return parser
@@ -43,9 +44,17 @@ class Training:
         args = parser.parse_args()
 
         nombre_desafio = args.desafio
+
+        # Instanciamos el dataparser
+        dp = DataParser(nombre_desafio)
+
         trainer = Trainer(
             nombre_desafio=nombre_desafio,
-            **config.CONFIG_DICT[nombre_desafio],  # TODO Cambiar por dataparser
+            train_dataset=dp.get_train_dataset(),
+            label_col_name=dp.label_col_name,
+            preprocesador=dp.get_preprocessor(),
+            modelo=dp.get_model(),
+            label_encoder=dp.get_label_encoder(),
         )
         try:
             trainer.run()

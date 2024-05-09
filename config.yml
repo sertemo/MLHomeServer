@@ -4,7 +4,7 @@ aidtec:
     label_col_name: "calidad"
     params:
       index_col: 0
-  preprocesador:
+  preprocessor:
     class_name: "WineDatasetTransformer"  # Dentro de data_processing/aidtec_transformer.py en este caso
     params:
       drop_columns:
@@ -13,8 +13,8 @@ aidtec:
         - "alcohol"
         - "densidad"
         - "dioxido de azufre libre"
-  modelo:
-    type: "sklearn.base"  # poner el módulo en el que se encuentra el modelo
+  model:
+    type: "sklearn.ensemble"  # poner el módulo en el que se encuentra el modelo
     class_name: "RandomForestClassifier"
     params:
       n_estimators: 900

@@ -241,7 +241,7 @@ Para hacer request de momento funcionan los siguientes endpoints:
 
 - GET http://trymlmodels.com:5000 > mensaje bienvenida
 - GET http://trymlmodels.com:5000/about > Información del servidor
-- POST con un csv http://trymlmodels.com:5000/nombre_desafio/predict > devuelve las predicciones
+- POST con un csv http://trymlmodels.com:5000/predict/nombre_desafio > devuelve las predicciones
 - GET http://trymlmodels.com:5000/nombre_desafio/model > devuelve info del modelo
 
 ## Agradecimientos

@@ -95,13 +95,24 @@ aidtec:
 ```
 
 ### 2. Ejecutar train.sh
+El entrenamiento se inicializa mediante el siguiente comando:
+
 ```sh
 $ ./train.sh <nombre_desafio>
 ```
 
+Para el proyecto **aidtec** el comando sería:
+```sh
+$ ./train.sh aidtec
+```
+
 Esto ejecutará el script `train.py` en la carpeta **ml/training** con el nombre del desafío como argumento.
 
-Es importante que el nombre del desafío coincida con el establecido en el archivo `desafios_settings.py`. Todos los datos del entrenamiento serán extraido de ahi.
+El nombre del desafio debe coincidir con el nombre de desafío especificado en el archivo de configuración `config.yml`.
+
+El algoritmo de entrenamiento mostrará por pantalla la evaluación del modelo usando CV con **5 splits** por defecto. Este parámetro se puede ajustar en `settings.py` dentro de **mlhomeserver/**.
+
+Al finalizar el entrenamiento se mostrará la precisión media de los splits y se guardará tanto el modelo entrenado en formato `.joblib` como el label encoder en caso de haberlo en la carpeta **models/nombre_desafio** en el directorio raiz del proyecto.
 
 
 ----
@@ -228,10 +239,10 @@ $ ./start.sh
 ## Uso de la API
 Para hacer request de momento funcionan los siguientes endpoints:
 
-- GET http://www.trymlmodels.com:5000 > mensaje bienvenida
-- GET http://www.trymlmodels.com:5000/about > Información del servidor
-- POST con un csv http://www.trymlmodels.com:5000/desafio/predict > devuelve las predicciones
-- GET http://www.trymlmodels.com:5000/desafio/model > devuelve info del modelo
+- GET http://trymlmodels.com:5000 > mensaje bienvenida
+- GET http://trymlmodels.com:5000/about > Información del servidor
+- POST con un csv http://trymlmodels.com:5000/nombre_desafio/predict > devuelve las predicciones
+- GET http://trymlmodels.com:5000/nombre_desafio/model > devuelve info del modelo
 
 ## Agradecimientos
 Special thanks to [**Miguel Zubiaga**](https://www.mzubiaga.net/) por ayudarme a montar este mini proyecto.

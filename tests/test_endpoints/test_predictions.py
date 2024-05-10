@@ -7,7 +7,7 @@ from unittest.mock import patch
 import numpy as np
 import pytest
 
-from mlhomeserver.exceptions import PreProcessorError, MissingCompetitionFolderError
+from mlhomeserver.exceptions import NonValidPreProcessor, MissingCompetitionFolderError
 from mlhomeserver.ml.data_processing.aidtec_transformer import WineDatasetTransformer
 from mlhomeserver.ml.predicting.predictor import Predictor
 import mlhomeserver.settings as settings
@@ -88,21 +88,21 @@ def test_predictor_class_init_with_valid_args(aidtec_dataparser):
     assert p.nombre == "aidtec"
     assert p.dataset == "dataframe_Aidtec"
     assert p.label_col_name == "calidad"
-    assert p.preprocesador == "WineDatasetTransformer"
+    assert isinstance(p.preprocesador, WineDatasetTransformer)
     assert p._nombre_label_encoder == "aidtec_" + LABEL_ENCODER_SUFFIX_NAME
     assert p._nombre_modelo == "aidtec_" + MODEL_SUFFIX_NAME
 
+
 def test_predictor_class_bad_preprocesor():
     dp = DataParser('aidtec')
-    with patch.object(dp, '_load_preprocessor', return_value=object()):
-        p = Predictor(
-            nombre_desafio="aidtec",  # Viene del usuario
-            dataset="dataframe_Aidtec",  # Viene del usuario
-            data_parser=dp,
-        )
-
-    with pytest.raises(PreProcessorError):
-        p.run()
+    with pytest.raises(NonValidPreProcessor):
+        with patch.object(dp, '_load_preprocessor', return_value=object()):
+            p = Predictor(
+                nombre_desafio="aidtec",  # Viene del usuario
+                dataset="dataframe_Aidtec",  # Viene del usuario
+                data_parser=dp,
+            )
+            p.run()
 
 @pytest.mark.localtest
 def test_no_folder_model(train_aidtec_raw, aidtec_dataparser):

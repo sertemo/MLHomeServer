@@ -36,5 +36,4 @@ COPY . /app
 EXPOSE 5000
 
 # Comando para ejecutar el servidor en modo producción
-#CMD ["uvicorn", "src.mlhomeserver.main:app", "--host", "0.0.0.0", "--port", "5000"]
-CMD ["uvicorn", "src.mlhomeserver.main:app", "--host", "localhost", "--port", "5000"]
+CMD ["uvicorn", "src.mlhomeserver.main:app", "--host", "0.0.0.0", "--port", "5000"]

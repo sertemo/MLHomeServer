@@ -30,32 +30,32 @@ El objetivo del entrenamiento manual es tener alojado en el contexto del proyect
 
 Para que el entrenamiento se realice correctamente hay que añadir los parámetros del **dataset**, del **preprocesador** del dataset y del **modelo** al archivo `config.yml` en la raiz principal del proyecto.
 
-El esquema del archivo es el siguiente:
+El formato del archivo es el siguiente:
 
 ```yml
-nombre_desafio:  # El nombre del desafío en cuestión
+[nombre_desafio]:  # El nombre del desafío en cuestión
   dataset:
-    filename: "train.csv"  # Nombre del archivo de train dentro de data/nombre_desafio
-    label_col_name: "target"  # Nombre de la columna de los targets
+    filename: [value]  # Nombre del archivo de train dentro de data/nombre_desafio
+    label_col_name: [value]  # Nombre de la columna de los targets
     params:  # Parámetros a pasar al 'read_csv' para abrir correctamente el dataframe
-      index_col: 0  # El dataframe tiene su primera columna como índice
+      [param1]: [value]
   preprocessor:
-    class_name: "CustomTransformer"  # Dentro de data_processing/nombre_desafio_transformer.py en este caso
+    class_name: [value]  # Dentro de data_processing/nombre_desafio_transformer.py en este caso
     params:  # Estos serán los parámetros a pasar al preprocesador
-      parametro1:
+      [parametro1]:  # Si hay que especificar una lista
         - "1"
         - "2"
         - "3"
-      parametro2:
+      [parametro2]:
         - "objeto1"
         - "objeto2"
   model:
-    type: "modulo.modelo"  # El módulo en el que se encuentra el modelo (tanto custom como de terceros)
-    class_name: "Modelo"  # Debe ser un modelo 
+    type: [value]  # El módulo en el que se encuentra el modelo (tanto custom como de terceros)
+    class_name: "Modelo"  # El nombre de la clase del modelo dentro del módulo 
     params:
-      parametro1: 123
-      parametro2: 321
-  label_encoder: true
+      [parametro1]: [value]
+      [parametro2]: [value]
+  label_encoder: [true o false]
 ```
 
 **Notas importantes**

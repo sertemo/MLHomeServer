@@ -4,6 +4,7 @@
 [![codecov](https://codecov.io/gh/sertemo/MLHomeServer/graph/badge.svg?token=6N7LBN76A2)](https://codecov.io/gh/sertemo/MLHomeServer)
 ![Dependabot](https://img.shields.io/badge/dependabot-enabled-blue.svg?logo=dependabot)
 ![GitHub](https://img.shields.io/github/license/sertemo/MLHomeServer)
+![Docker](https://img.shields.io/docker/image-size/sertemo/mlhomeserver?color=blue&logo=docker)
 ----
 ![Pytest](https://img.shields.io/badge/testing-pytest-blue.svg)
 ![Black](https://img.shields.io/badge/code%20style-black-blue.svg)
@@ -116,6 +117,45 @@ Al finalizar el entrenamiento se mostrará la precisión media de los splits y s
 
 
 ----
+## Docker
+Se ha creado un workflow en Github `docker.yml` que al hacer push realiza lo siguiente:
+- Genera una nueva imagen
+- Sube a mi DockerHub la imagen. Para realizar esto se han tenido que agregar a los **secrets** del repositorio tanto el **DOCKER_USERNAME** como el **DOCKER_PASSWORD**
+
+La idea es crear un **cronjob** en el servidor que periódicamente descargue la última imagen de DockerHub correspondiente al repositorio y compruebe si ha habido cambios. Si ha habido cambios se construirá automáticamente un nuevo contenedor vinculando el volumen **model-data** para hacer que los modelos entrenados persistan. Esto se ejecutará mediante script por ejemplo asi:
+```sh
+docker run -d -p 5000:8000 -v model-data:app/models mlhomeserver
+```
+
+También borrará el contenedor anterior.
+```sh
+docker rm nombre_contenedor
+```
+
+Si los cambios en el repo son porque se ha agregado un nuevo desafío (habrá que aumentar la versión en 1 en el minor) habrá que conectarse al servidor para entrenar el modelo.
+
+### Entrenar un modelo en docker
+Para entrenar un modelo en docker primer hay que acceder al servidor. Se puede usar **ssh**.
+
+Después habrá que acceder al contenedor:
+
+Listar los contenedores que están corriendo actualmente:
+```sh
+docker ps
+```
+
+Una vez identificado el contenedor adecuado hay que meterse dentro. Desde **Windows** :
+```sh
+docker exec -it nombre_contenedor //bin/bash
+```
+
+Dentro de la consola ejecutar como si se estuviera en local:
+```sh
+./train.sh nombre_desafio
+```
+
+
+
 
 ## Puesta en marcha del servidor
 ### 1. API con FastAPI

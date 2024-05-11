@@ -20,3 +20,23 @@ aidtec:
       n_estimators: 900
       random_state: 42
   label_encoder: true
+
+tictactoe:
+  dataset:
+    filename: "train.csv"  # Dentro de data/nombre_desafio
+    label_col_name: "calidad"
+    params:
+      index_col: 0
+  preprocessor:
+    class_name: "WineDatasetTransformer"  # Dentro de data_processing/aidtec_transformer.py en este caso
+    params:
+      drop_columns:
+        - "year"
+        - "color"
+  model:
+    type: "sklearn.ensemble"  # poner el módulo en el que se encuentra el modelo
+    class_name: "RandomForestClassifier"
+    params:
+      n_estimators: 150
+      random_state: 33
+  label_encoder: true

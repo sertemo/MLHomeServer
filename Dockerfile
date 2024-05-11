@@ -24,6 +24,9 @@ RUN poetry config virtualenvs.create false && \
 # Copiar solo archivos necesarios para la instalación de dependencias
 COPY pyproject.toml poetry.lock* /app/
 
+# Asegurarse de que se está copiando el archivo config.yml actualizado
+COPY config.yml /app/config.yml
+
 # Instalar dependencias de proyecto utilizando Poetry
 RUN poetry install --no-dev --no-interaction --no-ansi
 
@@ -33,7 +36,6 @@ RUN echo $PATH && poetry run which uvicorn
 COPY . /app
 # Corregir finales de línea en el script train.sh
 RUN sed -i 's/\r$//' train.sh
-
 
 # Exponer el puerto en el que uvicorn estará escuchando
 EXPOSE 5000

@@ -31,6 +31,9 @@ RUN echo $PATH && poetry run which uvicorn
 
 # Copiar el resto del código fuente al contenedor
 COPY . /app
+# Corregir finales de línea en el script train.sh
+RUN sed -i 's/\r$//' train.sh
+
 
 # Exponer el puerto en el que uvicorn estará escuchando
 EXPOSE 5000

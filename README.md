@@ -62,8 +62,8 @@ El formato del archivo es el siguiente:
 **Notas importantes**
 - Será siempre necesario hacer un preprocesador personalizado y guardarlo en **ml/data_processing/nombre_desafio_transformer.py**
 - El **preprocesador** debe tener un método `fit_transform`. o heredar de `TransformerMixin` del módulo `sklearn.base`.
-- El archivo dataset par el entrenamiento debe estar guardado en la carpeta data dentro de una carpeta con el mismo nombre del desafío: **data/nombre_desafio/**.
-- El modelo puede ser un modelo personalizado, en tal caso deberá guardarse en la carpeta **models** y especificar el módulo en el que se encuentra y su nombre en el archivo config.yml.
+- El archivo dataset para el entrenamiento debe estar guardado en la carpeta data dentro de una carpeta con el mismo nombre del desafío: **data/nombre_desafio/**.
+- El modelo puede ser un modelo personalizado, en tal caso deberá guardarse en la carpeta **ml/models** y especificar el módulo en el que se encuentra y su nombre en el archivo config.yml.
 - Para que sea válido el modelo debe tener los métodos `fit` y `predict`.
 - En caso de usar un modelo de una librería como por ejemplo `sklearn` es necesario también especificar el módulo desde el que hay que importarlo y su nombre.
 
@@ -154,7 +154,10 @@ Esto permitirá hacer que los modelos que entrenemos en el servidor sean persist
 
 Se ha creado un workflow en Github `docker.yml` que al hacer push realiza lo siguiente:
 - Genera una nueva imagen
-- Sube a mi DockerHub la imagen. Para realizar esto se han tenido que agregar a los **secrets** del repositorio tanto el **DOCKER_USERNAME** como el **DOCKER_PASSWORD**
+- Sube a mi DockerHub la imagen. Para realizar esto se han tenido que agregar a los **secrets** del repositorio tanto el **DOCKER_USERNAME** como el **DOCKER_PASSWORD**.
+
+**Nota**:
+- Se ha añadido un condicional a la creación de la imagen para que solo se ejecute si se detectan cambios en ciertas rutas.
 
 La idea es crear un **cronjob** en el servidor que periódicamente descargue la última imagen de DockerHub correspondiente al repositorio y compruebe si ha habido cambios. Si ha habido cambios se construirá automáticamente un nuevo contenedor vinculando el volumen **model-data** para hacer que los modelos entrenados persistan. Esto se ejecutará mediante script por ejemplo asi:
 ```sh

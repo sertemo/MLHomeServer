@@ -15,3 +15,4 @@ Dockerfile
 *.md
 LICENSE
 tests/
+assets/

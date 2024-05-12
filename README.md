@@ -117,8 +117,41 @@ Al finalizar el entrenamiento se mostrará la precisión media de los splits y s
 
 
 ----
-## Docker
-![alt text](assets/img/docker-svgrepo-com.svg)
+## Docker ![alt text](assets/img/docker-svgrepo-com.svg)
+### Pre requisitos
+Antes de poder tener en funcionamiento la API en un docker en el lado del servidor, hay que instalar docker. Para ello se puede hacer preparando el siguiente script sacado de la [doc](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository) oficial:
+```sh
+# Setup del repositorio de Docker
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+# Instalar paquetes
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Verificar que haya ido ok
+sudo docker run hello-world
+```
+
+Si se usa una distro tipo **Xubuntu**, **Mint** etc, poner `$UBUNTU_CODENAME` en lugar de `$VERSION_CODENAME`.
+
+Después habrá que crear un volumen llamado `model-data`:
+```sh
+$ docker volume create model-data
+```
+
+Esto permitirá hacer que los modelos que entrenemos en el servidor sean persistentes.
+
 Se ha creado un workflow en Github `docker.yml` que al hacer push realiza lo siguiente:
 - Genera una nueva imagen
 - Sube a mi DockerHub la imagen. Para realizar esto se han tenido que agregar a los **secrets** del repositorio tanto el **DOCKER_USERNAME** como el **DOCKER_PASSWORD**

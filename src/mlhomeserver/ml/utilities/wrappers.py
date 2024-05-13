@@ -15,9 +15,10 @@
 """Módulo para clases y objetos personalizados válidos
 para todos los proyectos de ML"""
 
+from datetime import datetime
 import joblib
 from pathlib import Path
-from typing import cast, Any
+from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
@@ -31,7 +32,8 @@ class SerializableMixin:
     para serializar un modelo"""
 
     def save(self, model_path: Path) -> None:
-        """Serializa el modelo usando joblib"""
+        """Serializa el modelo usando joblib. Guarda la fecha
+        antes de guardar el modelo"""
         with open(model_path, "wb") as f:
             joblib.dump(self, f)
 
@@ -54,7 +56,9 @@ class DeserializableMixin(SerializableMixin):
     @classmethod
     def load(cls, model_path: str | Path) -> Any:
         with open(model_path, "rb") as f:
-            classifier = cast(SerializableClassifier, joblib.load(f))
+            classifier: SerializableTransformer | SerializableClassifier = joblib.load(
+                f
+            )
         return classifier
 
 
@@ -123,12 +127,14 @@ class SerializableClassifier(
 
     def __init__(self, classifier: BaseEstimator) -> None:
         self.classifier: BaseEstimator = classifier
+        self.last_trained: datetime = datetime.now()
 
     def fit(
         self,
         X: NDArray[np.float64] | pd.DataFrame,
         y: NDArray[np.float64] | pd.DataFrame,
     ) -> "SerializableClassifier":
+        self.last_trained = datetime.now()
         self.classifier.fit(X, y)
         return self
 

@@ -21,9 +21,9 @@ import pandas as pd
 
 
 from mlhomeserver.api.schemas import CustomResponse, Prediction
+from mlhomeserver.api.utils import validate_competition_or_raise
 from mlhomeserver.ml.predicting.predict import predict
 from mlhomeserver.parser import DataParser
-from mlhomeserver.utils import get_current_competitions_from_yml
 
 router = APIRouter(responses={404: {"error": "No encontrado"}})
 
@@ -34,20 +34,15 @@ router = APIRouter(responses={404: {"error": "No encontrado"}})
     response_model=CustomResponse,
 )
 async def predicciones(nombre_desafio: str, file: UploadFile = File(...)):
+    # Validamos que pasen archivo y que sea csv
     if not file.filename or not file.filename.endswith(".csv"):
         print(f"Archivo no válido: {nombre_desafio}")
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Debes enviar un archivo *.csv",
         )
-
-    if nombre_desafio not in get_current_competitions_from_yml():
-        print(f"Nombre de desafío no válido: {nombre_desafio}")
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"El nombre de desafío {nombre_desafio} no es un desafío válido. \
-                Los desafíos válidos son: {get_current_competitions_from_yml()}",
-        )
+    # Validamos nombre válido
+    validate_competition_or_raise(nombre_desafio)
 
     # Abrimos el dataframe
     try:

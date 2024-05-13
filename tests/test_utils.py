@@ -5,4 +5,4 @@ def test_get_project_version():
     assert get_project_version() == '0.1.0'
 
 def test_get_current_competitions_correct():
-    assert get_current_competitions_from_yml() == ['aidtec', 'tictactoe']
+    assert get_current_competitions_from_yml() == ['aidtec']

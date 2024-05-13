@@ -5,14 +5,6 @@
 ![Dependabot](https://img.shields.io/badge/dependabot-enabled-blue.svg?logo=dependabot)
 ![GitHub](https://img.shields.io/github/license/sertemo/MLHomeServer)
 ![Docker](https://img.shields.io/docker/image-size/sertemo/mlhomeserver?color=blue&logo=docker)
-----
-![Pytest](https://img.shields.io/badge/testing-pytest-blue.svg)
-![Black](https://img.shields.io/badge/code%20style-black-blue.svg)
-![Flake8](https://img.shields.io/badge/linter-flake8-blue.svg)
-![MyPy](https://img.shields.io/badge/type%20checker-mypy-blue.svg)
-----
-![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
-![Poetry](https://img.shields.io/badge/Poetry-60A5FA?style=for-the-badge&logo=python&logoColor=white)
 
 ## Descripción
 Pequeño proyecto para montar un servidor en el ordenador Samsung del 2011 con **Xubuntu**.
@@ -327,6 +319,21 @@ Para hacer request de momento funcionan los siguientes endpoints:
 
 ## Agradecimientos
 Special thanks to [**Miguel Zubiaga**](https://www.mzubiaga.net/) por ayudarme a montar este mini proyecto.
+
+## Tecnologías
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
+![Poetry](https://img.shields.io/badge/Poetry-60A5FA?style=for-the-badge&logo=python&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
+![YAML](https://img.shields.io/badge/yaml-%23ffffff.svg?style=for-the-badge&logo=yaml&logoColor=151515)
+
+## Tests
+![Pytest](https://img.shields.io/badge/testing-pytest-blue.svg)
+![Black](https://img.shields.io/badge/code%20style-black-blue.svg)
+![Flake8](https://img.shields.io/badge/linter-flake8-blue.svg)
+![MyPy](https://img.shields.io/badge/type%20checker-mypy-blue.svg)
+
 
 ## Licencia
 Copyright 2024 Sergio Tejedor Moreno

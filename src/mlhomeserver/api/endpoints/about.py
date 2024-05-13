@@ -36,11 +36,9 @@ async def about():
                 "nombre": "ML Home Server",
                 "version": get_project_version(),
                 "descripción": dedent(
-                    """
-                API para lanzar predicciones de modelos
-                de ML previamente entrenados y que corresponden con los desafíos
-                de la web de Kopuru.
-                """
+                    "API para lanzar predicciones de modelos\
+                de ML previamente entrenados y que corresponden con los desafíos\
+                de la web de Kopuru."
                 ),
             },
             "autor": {

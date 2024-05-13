@@ -188,6 +188,78 @@ Después se podría salir simplemente ejecutando:
 $ exit
 ```
 
+### Actualizar automáticamente los cambios en el servidor
+Para actualizar los cambios en el contenedor Docker del servidor se preparará un **cronjob** que se ejecutará periódicamente. De momento empezaremos ejecuando el script 1 vez al día, a las **23:30** que hará lo siguiente:
+1. Pull al repo de DockerHun donde está la imagen
+2. Comparar la ID de la iamgen descargada con la imagen del contenedor en ejecución
+3. Si la imagen es distinta se parará el contenedor
+4. Se creará un contenedor nuevo
+
+El script `update_docker.sh` puede ser algo así:
+```sh
+#!/bin/bash
+
+# Configuración
+IMAGE_NAME="sertemo/mlhomeserver:latest"
+CONTAINER_NAME="mi_contenedor"
+VOLUME_NAME="model-data"
+
+# Hacer pull de la última imagen
+docker pull $IMAGE_NAME
+
+# Comprobar si el contenedor está corriendo
+if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+    # Obtener el ID de la imagen del contenedor en ejecución
+    RUNNING_IMAGE=$(docker inspect --format='{{.Image}}' $CONTAINER_NAME)
+
+    # Obtener el ID de la última imagen
+    LATEST_IMAGE=$(docker inspect --format='{{.Id}}' $IMAGE_NAME)
+
+    # Comparar los IDs de imagen
+    if [ "$RUNNING_IMAGE" != "$LATEST_IMAGE" ]; then
+      echo "Nueva imagen detectada, actualizando el contenedor..."
+
+      # Detener y eliminar el contenedor actual
+      docker stop $CONTAINER_NAME
+      docker rm $CONTAINER_NAME
+
+      # Correr el nuevo contenedor con la nueva imagen
+      docker run -d -p 5000:5000 --name $CONTAINER_NAME -v $VOLUME_NAME:/app/models $IMAGE_NAME
+
+      echo "Contenedor actualizado exitosamente."
+
+      # Limpieza de imágenes no utilizadas
+      docker image prune -f --filter "until=24h"
+      
+      echo "Limpieza de imágenes antiguas completada."
+      
+      exit 0
+    else
+      echo "No se detectaron actualizaciones de imagen."
+      exit 0
+    fi
+else
+    # Correr el nuevo contenedor por primera vez si no está corriendo
+    docker run -d -p 5000:5000 --name $CONTAINER_NAME -v $VOLUME_NAME:/app/models $IMAGE_NAME
+    echo "Contenedor creado por primera vez."
+fi
+
+
+```
+
+Para crear un cronjob se ejecuta lo siguiente:
+```sh
+$ crontab -e
+```
+
+Esto abrirá el editor de tareas programadas. Escribimos:
+
+```sh
+30 23 * * * ~/Python/MLHomeServer/update_docker.sh
+
+```
+
+Para ejecutar la tarea todos los días a las 23:30.
 
 
 ## Puesta en marcha del servidor

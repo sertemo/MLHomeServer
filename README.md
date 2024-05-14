@@ -163,7 +163,40 @@ $ docker rm nombre_contenedor
 
 Si los cambios en el repo son porque se ha agregado un nuevo desafío (habrá que aumentar la versión en 1 en el minor) habrá que conectarse al servidor para entrenar el modelo.
 
-### Entrenar un modelo en docker
+### Acceso remoto al servidor mediante SSH
+Para acceder al servidor remotamente primero habrá que tener instalado **OpenSSH**
+```sh
+$ sudo apt update
+$ sudo apt install openssh-server
+```
+
+Verificar que el servidor esté corriendo y sino  iniciarlo:
+```sh
+$ sudo systemctl status ssh
+$ sudo systemctl start ssh
+```
+
+Se puede habilitar el servicio **ssh** para que arranque automáticamente con el sistema:
+```sh
+$ sudo systemctl enable ssh
+```
+Por defecto el servicio está escuchando en el puerto **22**.
+una vez tenemos el servicio corriendo tenemos que realizar de nuevo un **Port Forwarding** desde nuestro router para derivar por ejemplo cualquier conexión externa al puerto **2222** (el 22 estaba ocupado) a la ip privada del servidor en el puerto 22. De esta manera conectamos ambos canales.
+
+Una vez hecho esto, podemos conectarnos a través de consola por ejemplo de **Git Bash** desde una ip exterior empleando ssh:
+
+```sh
+$ ssh <usuario_del_servidor>@trymlmodels.com:2222
+```
+
+Tras realizarse la conexión nos pedirá la contraseña del usuario.
+
+Otra opción para conectarse desde **Windows** es utilizar [PuTTY](https://www.putty.org/).
+![alt text](assets/img/putty.JPG)
+
+Puede configurarse una sesión interna para conectarse desde casa usando la ip privada del servidor y otra sesión externa para conectarse al dominio trymlmodels.com a través del puerto 2222.
+
+### Entrenar un modelo dentro de un contenedor docker
 Para entrenar un modelo en docker primer hay que acceder al servidor. Se puede usar **ssh**.
 
 Después habrá que acceder al contenedor:

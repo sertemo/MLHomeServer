@@ -38,5 +38,5 @@ def validate_competition_or_raise(nombre_desafio: str) -> None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"El nombre de desafío {nombre_desafio} no es un desafío válido.\
-            Los desafíos válidos son: {get_current_competitions_from_yml()}",
+            Los desafíos válidos son: {', '.join(get_current_competitions_from_yml())}",
         )

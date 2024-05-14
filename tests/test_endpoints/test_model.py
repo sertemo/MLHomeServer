@@ -12,7 +12,7 @@ def test_model_with_invalid_competition_name(client):
     assert response.status_code == 404
     print("Printeando response:", response.json())
     assert response.json() == {"detail": f"El nombre de desafío no_existe no es un desafío válido.\
-            Los desafíos válidos son: {get_current_competitions_from_yml()}"}
+            Los desafíos válidos son: {', '.join(get_current_competitions_from_yml())}"}
 
 
 @pytest.mark.localtest

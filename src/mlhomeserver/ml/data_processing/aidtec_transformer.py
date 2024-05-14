@@ -180,8 +180,8 @@ class WineDatasetTransformer(TransformerMixin, BaseEstimator):
 
     def transform(self, X: pd.DataFrame) -> pd.DataFrame:
         X_ = X.copy()
-        if self.corregir_alcohol:
-            # Corregimos alcohol
+        if self.corregir_alcohol and X_["alcohol"].dtype == "object":
+            # Corregimos alcohol solo si es object
             X_["alcohol"] = self._corregir_valores_alcohol(X_["alcohol"])
         if self.corregir_densidad:
             # Corregimos densidad

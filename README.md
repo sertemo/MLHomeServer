@@ -192,6 +192,7 @@ $ ssh <usuario_del_servidor>@trymlmodels.com:2222
 Tras realizarse la conexión nos pedirá la contraseña del usuario.
 
 Otra opción para conectarse desde **Windows** es utilizar [PuTTY](https://www.putty.org/).
+
 ![alt text](assets/img/putty.JPG)
 
 Puede configurarse una sesión interna para conectarse desde casa usando la ip privada del servidor y otra sesión externa para conectarse al dominio trymlmodels.com a través del puerto 2222.

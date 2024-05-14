@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from pathlib import Path
+from unittest.mock import MagicMock
 
 from fastapi.testclient import TestClient
 import pandas as pd
@@ -22,11 +23,13 @@ from unittest.mock import patch
 from mlhomeserver.main import app
 import mlhomeserver.settings as settings
 from mlhomeserver.ml.training.trainer import Trainer
+from mlhomeserver.ml.utilities.wrappers import SerializableClassifier
 from mlhomeserver.parser import DataParser
 
 @pytest.fixture(scope="session")
 def client():
     return TestClient(app)
+
 
 @pytest.fixture(scope="session")
 def train_aidtec_raw():
@@ -34,11 +37,13 @@ def train_aidtec_raw():
     df_train_raw = pd.read_csv(settings.DATA_PATH / "aidtec" / 'train.csv', index_col=0)
     return df_train_raw
 
+
 @pytest.fixture(scope="session")
 def train_aidtec_raw_no_label_col():
     # Cargamos el dataset
     df_train_raw = pd.read_csv(settings.DATA_PATH / "aidtec" / 'train.csv', index_col=0)
     return df_train_raw.drop(columns=['calidad'])
+
 
 @pytest.fixture(scope="session")
 def trainer_bad_preprocessor():
@@ -60,11 +65,11 @@ def aidtec_dataparser():
 
 
 @pytest.fixture(scope="session")
-def trainer_bad_label_col_namee():
+def trainer_bad_label_col_name():
     trainer = Trainer(
         nombre_desafio="aidtec",
         label_col_name="calidad",
-        train_dataset_filename="train.csv",
+        train_dataset="train.csv",
         preprocesador=object(),
         modelo=object(),
         label_encoder=True,
@@ -75,3 +80,10 @@ def trainer_bad_label_col_namee():
 def mock_trainer():  # Patchearlo donde SE USA, NO donde se define
     with patch('mlhomeserver.ml.training.train.Trainer') as TrainerMock:
         yield TrainerMock
+
+
+@pytest.fixture
+def mock_model():
+    model = MagicMock(spec=SerializableClassifier)
+    model.get_params.return_value = {'n_estimators': 100, 'max_depth': 2}
+    return model

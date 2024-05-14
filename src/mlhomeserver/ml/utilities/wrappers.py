@@ -127,7 +127,6 @@ class SerializableClassifier(
 
     def __init__(self, classifier: BaseEstimator) -> None:
         self.classifier: BaseEstimator = classifier
-        self.last_trained: datetime = datetime.now()
 
     def fit(
         self,
@@ -142,6 +141,10 @@ class SerializableClassifier(
         check_is_fitted(self.classifier)
         predictions: NDArray[np.int64] = self.classifier.predict(X)
         return predictions
+
+    def get_params(self) -> dict[str, Any]:
+        params: dict[str, Any] = self.classifier.get_params()
+        return params
 
     def __getattr__(self, attr: Any) -> Any:
         """Delega atributos al clasificador subyacente si no se encuentran en 'self'."""

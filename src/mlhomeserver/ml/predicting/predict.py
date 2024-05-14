@@ -30,7 +30,7 @@ def predict(
     print(data_parser)
     predictor = Predictor(
         nombre_desafio=nombre_desafio,
-        dataset=dataset_predecir,  # TODO PAsarle la instancia del dataparser ? o no
+        dataset=dataset_predecir,
         data_parser=data_parser,
     )
     try:

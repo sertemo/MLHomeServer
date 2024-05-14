@@ -15,6 +15,7 @@
 """Funciones auxiliares para el ML"""
 
 from functools import lru_cache
+import json
 from pathlib import Path
 from typing import Any
 
@@ -55,3 +56,15 @@ def load_model(nombre_desafio: str) -> SerializableClassifier:
     ruta_modelo = settings.MODELS_FOLDER / Path(nombre_desafio) / nombre_modelo
     modelo: SerializableClassifier = SerializableClassifier.load(ruta_modelo)
     return modelo
+
+
+def load_model_metadata(nombre_desafio: str) -> dict[str, Any]:
+    """Devuelve un dict con la metadata del modelo
+    correspondiente al desafío"""
+    metadata_filename = "".join([nombre_desafio, "_", settings.MODEL_METADATA_SUFIX])
+    ruta_completa = settings.MODELS_FOLDER / Path(nombre_desafio) / metadata_filename
+
+    with open(ruta_completa, "r") as f:
+        metadata: dict[str, Any] = json.load(f)
+
+    return metadata

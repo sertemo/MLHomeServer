@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mlhomeserver"
-version = "0.1.0"
+version = "0.1.1"
 description = "Servidor Casero para correr predicciones de modelos ML"
 authors = ["sertemo <tejedor.moreno@gmail.com>"]
 readme = "README.md"

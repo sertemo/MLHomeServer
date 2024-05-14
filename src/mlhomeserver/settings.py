@@ -21,6 +21,7 @@ DATA_PATH = Path("data")
 MODELS_FOLDER = Path("models")
 MODEL_SUFFIX_NAME = "model.joblib"
 LABEL_ENCODER_SUFFIX_NAME = "labelencoder.joblib"
+MODEL_METADATA_SUFIX = "model_metadata.json"
 
 # Archivo de configuración de desafíos
 CONFIG_FILE = "config.yml"

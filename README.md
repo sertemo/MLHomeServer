@@ -1,5 +1,5 @@
 # ML Home Server
-### v0.1.0
+### v0.1.1
 ![Tests](https://github.com/sertemo/MLHomeServer/actions/workflows/tests.yml/badge.svg)
 [![codecov](https://codecov.io/gh/sertemo/MLHomeServer/graph/badge.svg?token=6N7LBN76A2)](https://codecov.io/gh/sertemo/MLHomeServer)
 ![Dependabot](https://img.shields.io/badge/dependabot-enabled-blue.svg?logo=dependabot)
@@ -423,8 +423,6 @@ Para hacer request de momento funcionan los siguientes endpoints:
 - POST con un csv http://trymlmodels.com:5000/predict/nombre_desafio > devuelve las predicciones
 - GET http://trymlmodels.com:5000/nombre_desafio/model > devuelve info del modelo
 
-## Agradecimientos
-Special thanks to [**Miguel Zubiaga**](https://www.mzubiaga.net/) por ayudarme a montar este mini proyecto.
 
 ## Tecnologías
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
@@ -440,6 +438,11 @@ Special thanks to [**Miguel Zubiaga**](https://www.mzubiaga.net/) por ayudarme a
 ![Flake8](https://img.shields.io/badge/linter-flake8-blue.svg)
 ![MyPy](https://img.shields.io/badge/type%20checker-mypy-blue.svg)
 
+## SemVer
+- 0.1.1 : Se corrige el endpoint model/desafio ya que daba problemas a la hora de devolver el last_trained. Se crea un archivo json aparte con la metadata del modelo.
+
+## Agradecimientos
+Special thanks to [**Miguel Zubiaga**](https://www.mzubiaga.net/) por ayudarme a montar este mini proyecto.
 
 ## Licencia
 Copyright 2024 Sergio Tejedor Moreno

@@ -14,6 +14,8 @@
 
 """Módulo con la clase Trainer General válida para entrenar cualquier modelo"""
 
+from datetime import datetime
+import json
 from pathlib import Path
 import time
 
@@ -68,6 +70,24 @@ class Trainer:
             self.train_dataset
         )
         return df_preprocessed
+
+    def _save_model_metadata(
+        self, modelo_desafio_folder: Path, modelo: SerializableClassifier
+    ) -> None:
+        """Guarda en un json la metadata del modelo:
+        el last_trained y los parámetros
+        """
+        metadata_path = modelo_desafio_folder / (
+            self.nombre + "_" + settings.MODEL_METADATA_SUFIX
+        )
+        metadata = {
+            "last_trained": str(datetime.now().isoformat()),
+            "params": modelo.get_params(),
+        }
+        print("Metadata:", metadata)
+
+        with open(metadata_path, "w") as f:
+            json.dump(metadata, f)
 
     def run(self) -> None:
         """Ejecuta la Pipeline de preproceso
@@ -131,6 +151,9 @@ class Trainer:
                 / (self.nombre + "_" + settings.LABEL_ENCODER_SUFFIX_NAME)
             )
 
+        # Guardamos la metadata
+        self._save_model_metadata(modelo_desafio_folder, self.modelo)
+
         # Fin del contador
         end = time.perf_counter()
 
@@ -144,6 +167,6 @@ class Trainer:
         print(
             f"Entrenamiento terminado. Tiempo de ejecución: {minutes} minutos y {seconds} segundos"
         )
-        print(f"Guardado modelo en {modelo_desafio_folder}")
+        print(f"Guardado modelo y metadata en {modelo_desafio_folder}")
         if self.label_encoder:
             print(f"Guardado LabelEncoder en {modelo_desafio_folder}")

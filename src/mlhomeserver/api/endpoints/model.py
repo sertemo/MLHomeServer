@@ -17,8 +17,7 @@
 
 from fastapi import APIRouter, status
 
-from mlhomeserver.ml.utilities.helpers import load_model
-from mlhomeserver.ml.utilities.wrappers import SerializableClassifier
+from mlhomeserver.ml.utilities.helpers import load_model_metadata
 from mlhomeserver.api.schemas import CustomResponse, ModelInfo
 from mlhomeserver.api.utils import validate_competition_or_raise
 
@@ -32,11 +31,12 @@ async def detalles_modelo(nombre_desafio):
     # Validamos el nombre de desafío
     validate_competition_or_raise(nombre_desafio)
 
-    # Cargamos el modelo
-    modelo: SerializableClassifier = load_model(nombre_desafio)
+    # Cargamos la metadata
+    metadata = load_model_metadata(nombre_desafio)
+
     model_info = ModelInfo(
-        last_trained=modelo.last_trained,
-        parameters=modelo.get_params(),
+        last_trained=metadata["last_trained"],
+        parameters=metadata["params"],
         competition=nombre_desafio,
     )
 

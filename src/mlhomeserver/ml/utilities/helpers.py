@@ -45,6 +45,25 @@ def deserialize(filename: str) -> Any:
     return obj
 
 
+def _make_model_path(nombre_desafio: str) -> Path:
+    """Devuelve la ruta del modelo
+
+    Parameters
+    ----------
+    nombre_desafio : str
+        _description_
+
+    Returns
+    -------
+    Path
+        _description_
+    """
+    nombre_modelo = "".join([nombre_desafio, "_", settings.MODEL_SUFFIX_NAME])
+    ruta_modelo: Path = settings.MODELS_FOLDER / Path(nombre_desafio) / nombre_modelo
+
+    return ruta_modelo
+
+
 @lru_cache(maxsize=500)
 def load_model(nombre_desafio: str) -> SerializableClassifier:
     """Carga un modelo serializado de la carpeta
@@ -52,17 +71,37 @@ def load_model(nombre_desafio: str) -> SerializableClassifier:
 
     Se necesitará esta función para mostrar los parámetros
     del modelo"""
-    nombre_modelo = "".join([nombre_desafio, "_", settings.MODEL_SUFFIX_NAME])
-    ruta_modelo = settings.MODELS_FOLDER / Path(nombre_desafio) / nombre_modelo
+
+    ruta_modelo: Path = _make_model_path(nombre_desafio)
     modelo: SerializableClassifier = SerializableClassifier.load(ruta_modelo)
     return modelo
+
+
+def _make_metadata_path(nombre_desafio: str) -> Path:
+    """Devuelvela ruta completa al archivo de metadata
+    del modelo
+
+    Parameters
+    ----------
+    nombre_desafio : str
+        _description_
+
+    Returns
+    -------
+    Path
+        _description_
+    """
+    metadata_filename = "".join([nombre_desafio, "_", settings.MODEL_METADATA_SUFIX])
+    ruta_completa = settings.MODELS_FOLDER / Path(nombre_desafio) / metadata_filename
+
+    return ruta_completa
 
 
 def load_model_metadata(nombre_desafio: str) -> dict[str, Any]:
     """Devuelve un dict con la metadata del modelo
     correspondiente al desafío"""
-    metadata_filename = "".join([nombre_desafio, "_", settings.MODEL_METADATA_SUFIX])
-    ruta_completa = settings.MODELS_FOLDER / Path(nombre_desafio) / metadata_filename
+
+    ruta_completa: Path = _make_metadata_path(nombre_desafio)
 
     with open(ruta_completa, "r") as f:
         metadata: dict[str, Any] = json.load(f)

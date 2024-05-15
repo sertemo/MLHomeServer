@@ -13,6 +13,8 @@ La idea es poder utilizarlo como API para hacer predicciones con modelos de ML y
 
 Este proyecto ofrece además la posibilidad de entrenar modelos.
 
+En un futuro próximo se montará el servidor en un mini PC **Beelink Mini S12 Pro Mini PC** en el que se instalará **Ubuntu 24.04 live server**.
+
 ## Entrenar un modelo localmente
 ### 1. Configurar el archivo de desafíos config.yml dentro de la raiz del proyecto
 Antes de entrenar un modelo hay que definir el desafío y los parámetros necesarios para el entrenamiento.
@@ -136,6 +138,8 @@ sudo docker run hello-world
 ```
 
 Si se usa una distro tipo **Xubuntu**, **Mint** etc, poner `$UBUNTU_CODENAME` en lugar de `$VERSION_CODENAME`.
+
+El script está guardado en la carpeta **assets/server_scripts**.
 
 Después habrá que crear un volumen llamado `model-data`:
 ```sh

@@ -15,6 +15,8 @@
 """Módulo para el endpoint de predicciones. Debe intentar ser válido
 para todos los desafíos"""
 
+import time
+
 from fastapi import APIRouter
 from fastapi import File, UploadFile, HTTPException, status
 import pandas as pd
@@ -70,6 +72,8 @@ async def predicciones(nombre_desafio: str, file: UploadFile = File(...)):
         )
 
     # Lanzamos predicciones
+    # Calculamos el tiempo
+    start = time.perf_counter()
     try:
         preds = predict(
             nombre_desafio=nombre_desafio, dataset_predecir=data_frame, data_parser=dp
@@ -83,8 +87,14 @@ async def predicciones(nombre_desafio: str, file: UploadFile = File(...)):
     else:
         preds_response = Prediction(labels=preds.tolist(), length=len(preds))
 
+    # Fin del contador
+    end = time.perf_counter()
+
+    elapsed_time = end - start
+
     response_data = {
         "predictions": preds_response,
+        "response_time": round(elapsed_time, 3),  # En segundos
     }
 
     return CustomResponse(

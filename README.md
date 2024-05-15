@@ -1,5 +1,5 @@
 # ML Home Server
-### v0.1.1
+### v0.1.2
 ![Tests](https://github.com/sertemo/MLHomeServer/actions/workflows/tests.yml/badge.svg)
 [![codecov](https://codecov.io/gh/sertemo/MLHomeServer/graph/badge.svg?token=6N7LBN76A2)](https://codecov.io/gh/sertemo/MLHomeServer)
 ![Dependabot](https://img.shields.io/badge/dependabot-enabled-blue.svg?logo=dependabot)
@@ -186,7 +186,7 @@ una vez tenemos el servicio corriendo tenemos que realizar de nuevo un **Port Fo
 Una vez hecho esto, podemos conectarnos a través de consola por ejemplo de **Git Bash** desde una ip exterior empleando ssh:
 
 ```sh
-$ ssh <usuario_del_servidor>@trymlmodels.com:2222
+$ ssh <usuario_del_servidor>@trymlmodels.com -p 2222
 ```
 
 Tras realizarse la conexión nos pedirá la contraseña del usuario.
@@ -211,6 +211,7 @@ Una vez identificado el contenedor adecuado hay que meterse dentro. Desde **Wind
 ```sh
 $ docker exec -it nombre_contenedor //bin/bash
 ```
+Para ejecutar desde linux el último argumento quedaría: `/bin/bash`. 
 
 Dentro de la consola ejecutar como si se estuviera en local:
 ```sh
@@ -224,10 +225,13 @@ $ exit
 
 ### Actualizar automáticamente los cambios en el servidor
 Para actualizar los cambios en el contenedor Docker del servidor se preparará un **cronjob** que se ejecutará periódicamente. De momento empezaremos ejecuando el script 1 vez al día, a las **23:30** que hará lo siguiente:
-1. Pull al repo de DockerHun donde está la imagen
-2. Comparar la ID de la iamgen descargada con la imagen del contenedor en ejecución
-3. Si la imagen es distinta se parará el contenedor
-4. Se creará un contenedor nuevo
+1. Pull al repo de DockerHun donde está la imagen.
+2. Comparar la ID de la iamgen descargada con la imagen del contenedor en ejecución.
+3. Si la imagen es distinta se parará el contenedor.
+4. Se creará un contenedor nuevo.
+5. Limpia las imágenes no utilizadas desde hace 24 h.
+
+El script captura la salida de cada ejecución y la recoge en el archivo `logfile.log` guardado en la misma carpeta que `update_docker.sh`.
 
 El script `update_docker.sh` puede ser algo así:
 ```sh
@@ -235,11 +239,17 @@ El script `update_docker.sh` puede ser algo así:
 
 # Configuración
 IMAGE_NAME="sertemo/mlhomeserver:latest"
-CONTAINER_NAME="mi_contenedor"
+CONTAINER_NAME="friendly_black"
 VOLUME_NAME="model-data"
+LOG_FILE="/home/sertemo/Python/MLHomeServer/logfile.log"
+
+# Función para añadir registros con fecha y hora a la consola y al archivo de log
+log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a $LOG_FILE
+}
 
 # Hacer pull de la última imagen
-docker pull $IMAGE_NAME
+docker pull $IMAGE_NAME | tee -a $LOG_FILE 2>&1
 
 # Comprobar si el contenedor está corriendo
 if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
@@ -251,34 +261,28 @@ if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
 
     # Comparar los IDs de imagen
     if [ "$RUNNING_IMAGE" != "$LATEST_IMAGE" ]; then
-      echo "Nueva imagen detectada, actualizando el contenedor..."
+        log "Nueva imagen detectada, actualizando el contenedor..."
 
-      # Detener y eliminar el contenedor actual
-      docker stop $CONTAINER_NAME
-      docker rm $CONTAINER_NAME
+        # Detener y eliminar el contenedor actual
+        docker stop $CONTAINER_NAME | tee -a $LOG_FILE 2>&1
+        docker rm $CONTAINER_NAME | tee -a $LOG_FILE 2>&1
 
-      # Correr el nuevo contenedor con la nueva imagen
-      docker run -d -p 5000:5000 --name $CONTAINER_NAME -v $VOLUME_NAME:/app/models $IMAGE_NAME
+        # Correr el nuevo contenedor con la nueva imagen
+        docker run -d -p 5000:5000 --name $CONTAINER_NAME -v $VOLUME_NAME:/app/models $IMAGE_NAME | tee -a $LOG_FILE 2>&1
 
-      echo "Contenedor actualizado exitosamente."
-
-      # Limpieza de imágenes no utilizadas
-      docker image prune -f --filter "until=24h"
-      
-      echo "Limpieza de imágenes antiguas completada."
-      
-      exit 0
+        log "Contenedor actualizado exitosamente."
     else
-      echo "No se detectaron actualizaciones de imagen."
-      exit 0
+        log "No se detectaron actualizaciones de imagen."
     fi
 else
     # Correr el nuevo contenedor por primera vez si no está corriendo
-    docker run -d -p 5000:5000 --name $CONTAINER_NAME -v $VOLUME_NAME:/app/models $IMAGE_NAME
-    echo "Contenedor creado por primera vez."
+    docker run -d -p 5000:5000 --name $CONTAINER_NAME -v $VOLUME_NAME:/app/models $IMAGE_NAME | tee -a $LOG_FILE 2>&1
+    log "Contenedor creado por primera vez."
 fi
 
-
+# Limpieza de imágenes no utilizadas independientemente de la actualización
+docker image prune -f --filter "until=24h" | tee -a $LOG_FILE 2>&1
+log "Limpieza de imágenes antiguas completada."
 ```
 
 Para crear un cronjob se ejecuta lo siguiente:
@@ -418,10 +422,69 @@ $ ./start.sh
 ## Uso de la API
 Para hacer request de momento funcionan los siguientes endpoints:
 
-- GET http://trymlmodels.com:5000 > mensaje bienvenida
-- GET http://trymlmodels.com:5000/about > Información del servidor
-- POST con un csv http://trymlmodels.com:5000/predict/nombre_desafio > devuelve las predicciones
-- GET http://trymlmodels.com:5000/nombre_desafio/model > devuelve info del modelo
+### GET http://trymlmodels.com:5000 > mensaje bienvenida
+
+### GET http://trymlmodels.com:5000/about > Información del servidor
+Formato de respuesta:
+
+```sh
+{
+  "status": "OK",
+  "project": {
+      "nombre": "ML Home Server",
+      "version": version del proyecto,
+      "descripción": descripción de la aplicación,
+  },
+  "autor": {
+      "nombre": "Sergio Tejedor",
+      "web": "https://tejedormoreno.com",
+      "github": "https://github.com/sertemo",
+      "Linkdin": "www.linkedin.com/in/sertemo",
+  },
+  "server": {
+      "system": sistema,
+      "release": release,
+      "version": version,
+      "machine": arquitectura,
+  },
+  "fecha": fecha,
+}
+```
+
+### POST con un csv http://trymlmodels.com:5000/predict/nombre_desafio > devuelve las predicciones
+Formato de la respuesta:
+
+```sh
+{
+  'data': {
+    'predictions': {
+        'labels': lista de predicciones,
+        'length': tamaño de la lista
+    },
+    'response_time': tiempo de respuesta en segundos
+  },
+ 'message': 'Predicciones realizadas con éxito',
+ 'status': 'OK',
+ 'timestamp': fecha y hora
+}
+```
+
+### GET http://trymlmodels.com:5000/nombre_desafio/model > devuelve info del modelo
+Formato de la respuesta:
+
+```sh
+{
+  'data': {
+    'model_info': {
+      'last_trained': '2024-05-14T20:34:00.067440',
+      'parameters': diccionario de parámetros del modelo
+      }
+  },
+ 'message': 'Información del modelo',
+ 'status': 'OK',
+ 'timestamp': fecha y hora
+}
+```
 
 
 ## Tecnologías
@@ -440,6 +503,7 @@ Para hacer request de momento funcionan los siguientes endpoints:
 
 ## SemVer
 - 0.1.1 : Se corrige el endpoint model/desafio ya que daba problemas a la hora de devolver el last_trained. Se crea un archivo json aparte con la metadata del modelo.
+- 0.1.2 : Se agrega el tiempo de respuesta en segundos al endpoint de predicciones.
 
 ## Agradecimientos
 Special thanks to [**Miguel Zubiaga**](https://www.mzubiaga.net/) por ayudarme a montar este mini proyecto.

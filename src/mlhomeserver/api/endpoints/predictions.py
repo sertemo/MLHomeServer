@@ -26,6 +26,7 @@ from mlhomeserver.api.schemas import CustomResponse, Prediction
 from mlhomeserver.api.utils import validate_competition_or_raise
 from mlhomeserver.ml.predicting.predict import predict
 from mlhomeserver.parser import DataParser
+from mlhomeserver.logging_config import logger
 
 router = APIRouter(responses={404: {"error": "No encontrado"}})
 
@@ -35,10 +36,12 @@ router = APIRouter(responses={404: {"error": "No encontrado"}})
     status_code=status.HTTP_201_CREATED,
     response_model=CustomResponse,
 )
-async def predicciones(nombre_desafio: str, file: UploadFile = File(...)):
+async def predicciones(
+    nombre_desafio: str, file: UploadFile = File(...)
+) -> CustomResponse:
     # Validamos que pasen archivo y que sea csv
     if not file.filename or not file.filename.endswith(".csv"):
-        print(f"Archivo no válido: {nombre_desafio}")
+        logger.info(f"Archivo no válido: {nombre_desafio}")
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Debes enviar un archivo *.csv",
@@ -53,19 +56,19 @@ async def predicciones(nombre_desafio: str, file: UploadFile = File(...)):
         dp = DataParser(nombre_desafio)
         data_frame = pd.read_csv(file.file, **dp.get_dataset_params())
     except pd.errors.EmptyDataError as e:
-        print("DEBUG:", e)
+        logger.error("Error al parsear:", e)
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail=f"El archivo CSV está vacío: {e}",
         )
     except pd.errors.ParserError as e:
-        print("DEBUG:", e)
+        logger.error("Error al parsear:", e)
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail=f"Error al parsear el CSV: {e}",
         )
     except Exception as e:
-        print("DEBUG:", e)
+        logger.error("Error al parsear:", e)
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail=f"Error desconocido al cargar CSV: {e}",
@@ -79,7 +82,7 @@ async def predicciones(nombre_desafio: str, file: UploadFile = File(...)):
             nombre_desafio=nombre_desafio, dataset_predecir=data_frame, data_parser=dp
         )  # Dependency injection
     except Exception as e:
-        print("DEBUG:", e)
+        logger.error("Error al lanzar predicciones:", e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Se ha producid un error al predecir: {e}",
@@ -96,6 +99,9 @@ async def predicciones(nombre_desafio: str, file: UploadFile = File(...)):
         "predictions": preds_response,
         "response_time": round(elapsed_time, 3),  # En segundos
     }
+    logger.info(
+        f"Predicciones OK en {round(elapsed_time, 3)} s con archivo: {file.filename}"
+    )
 
     return CustomResponse(
         status="OK",

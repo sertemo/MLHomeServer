@@ -28,3 +28,8 @@ CONFIG_FILE = "config.yml"
 
 # Training
 SPLITS_FOR_CV = 5
+
+# Logging
+FOLDER_LOGS = Path("logs")
+LOG_FILE = "mlhomeserverlog.log"
+LOG_PATH = FOLDER_LOGS / LOG_FILE

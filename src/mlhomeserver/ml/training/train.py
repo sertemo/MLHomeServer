@@ -21,6 +21,7 @@ import argparse
 from mlhomeserver.ml.training.trainer import Trainer
 from mlhomeserver.parser import DataParser
 from mlhomeserver.utils import get_current_competitions_from_yml
+from mlhomeserver.logging_config import logger
 
 
 class Training:
@@ -58,8 +59,9 @@ class Training:
         )
         try:
             trainer.run()
+            logger.info(f"Entrenamiento de {nombre_desafio} realizado correctamente.")
         except Exception as e:
-            print(f"Se ha producido un error al entrenar: {e}")
+            logger.error(f"Se ha producido un error al entrenar: {e}")
             return
 
 

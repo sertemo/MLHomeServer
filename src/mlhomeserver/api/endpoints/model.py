@@ -27,7 +27,7 @@ router = APIRouter(responses={404: {"mensaje": "No encontrado"}}, tags=["model"]
 @router.get(
     "/{nombre_desafio}", status_code=status.HTTP_200_OK, response_model=CustomResponse
 )
-async def detalles_modelo(nombre_desafio):
+async def detalles_modelo(nombre_desafio) -> CustomResponse:
     # Validamos el nombre de desafío
     validate_competition_or_raise(nombre_desafio)
 

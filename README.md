@@ -1,5 +1,5 @@
 # ML Home Server
-### v0.1.2
+### v0.1.3
 ![Tests](https://github.com/sertemo/MLHomeServer/actions/workflows/tests.yml/badge.svg)
 [![codecov](https://codecov.io/gh/sertemo/MLHomeServer/graph/badge.svg?token=6N7LBN76A2)](https://codecov.io/gh/sertemo/MLHomeServer)
 ![Dependabot](https://img.shields.io/badge/dependabot-enabled-blue.svg?logo=dependabot)
@@ -141,12 +141,12 @@ Si se usa una distro tipo **Xubuntu**, **Mint** etc, poner `$UBUNTU_CODENAME` en
 
 El script está guardado en la carpeta **assets/server_scripts**.
 
-Después habrá que crear un volumen llamado `model-data`:
+Después habrá que crear el  volumen `model-data` y `logs`:
 ```sh
-$ docker volume create model-data
+$ docker volume create model-data logs
 ```
 
-Esto permitirá hacer que los modelos que entrenemos en el servidor sean persistentes.
+Esto permitirá hacer que tanto los modelos que entrenemos en el servidor como los logs sean persistentes y no dependen del contenedor.
 
 Se ha creado un workflow en Github `docker.yml` que al hacer push realiza lo siguiente:
 - Genera una nueva imagen
@@ -157,7 +157,10 @@ Se ha creado un workflow en Github `docker.yml` que al hacer push realiza lo sig
 
 La idea es crear un **cronjob** en el servidor que periódicamente descargue la última imagen de DockerHub correspondiente al repositorio y compruebe si ha habido cambios. Si ha habido cambios se construirá automáticamente un nuevo contenedor vinculando el volumen **model-data** para hacer que los modelos entrenados persistan. Esto se ejecutará mediante script por ejemplo asi:
 ```sh
-$ docker run -d -p 5000:8000 -v model-data:/app/models mlhomeserver
+$ docker run -d -p 5000:5000 --name friendly_black \
+  -v model-data:/app/models \
+  -v logs:/app/logs \
+  mlhomeserver
 ```
 
 También borrará el contenedor anterior.
@@ -244,8 +247,9 @@ El script `update_docker.sh` puede ser algo así:
 # Configuración
 IMAGE_NAME="sertemo/mlhomeserver:latest"
 CONTAINER_NAME="friendly_black"
-VOLUME_NAME="model-data"
-LOG_FILE="/home/sertemo/Python/MLHomeServer/logfile.log"
+VOLUME_MODEL="model-data"
+VOLUME_LOGS="logs"
+LOG_FILE="/home/sertemo/Python/MLHomeServer/dockerlog.log"
 
 # Función para añadir registros con fecha y hora a la consola y al archivo de log
 log() {
@@ -272,7 +276,10 @@ if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
         docker rm $CONTAINER_NAME | tee -a $LOG_FILE 2>&1
 
         # Correr el nuevo contenedor con la nueva imagen
-        docker run -d -p 5000:5000 --name $CONTAINER_NAME -v $VOLUME_NAME:/app/models $IMAGE_NAME | tee -a $LOG_FILE 2>&1
+        docker run -d -p 5000:5000 --name $CONTAINER_NAME \
+          -v $VOLUME_MODEL:/app/models \
+          -v $VOLUME_LOGS:/app/logs \
+          $IMAGE_NAME | tee -a $LOG_FILE 2>&1
 
         log "Contenedor actualizado exitosamente."
     else
@@ -280,7 +287,10 @@ if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
     fi
 else
     # Correr el nuevo contenedor por primera vez si no está corriendo
-    docker run -d -p 5000:5000 --name $CONTAINER_NAME -v $VOLUME_NAME:/app/models $IMAGE_NAME | tee -a $LOG_FILE 2>&1
+    docker run -d -p 5000:5000 --name $CONTAINER_NAME \
+      -v $VOLUME_MODEL:/app/models \
+      -v $VOLUME_LOGS:/app/logs \
+      $IMAGE_NAME | tee -a $LOG_FILE 2>&1
     log "Contenedor creado por primera vez."
 fi
 
@@ -508,6 +518,7 @@ Formato de la respuesta:
 ## SemVer
 - 0.1.1 : Se corrige el endpoint model/desafio ya que daba problemas a la hora de devolver el last_trained. Se crea un archivo json aparte con la metadata del modelo.
 - 0.1.2 : Se agrega el tiempo de respuesta en segundos al endpoint de predicciones.
+- 0.1.3 : Se añade logging a la API
 
 ## Agradecimientos
 Special thanks to [**Miguel Zubiaga**](https://www.mzubiaga.net/) por ayudarme a montar este mini proyecto.

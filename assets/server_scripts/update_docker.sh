@@ -3,7 +3,7 @@
 IMAGE_NAME="sertemo/mlhomeserver:latest"
 CONTAINER_NAME="friendly_black"
 VOLUME_NAME="model-data"
-LOG_FILE="/home/sertemo/Python/MLHomeServer/logfile.log"
+LOG_FILE="/home/sertemo/Python/MLHomeServer/dockerlog.log"
 
 # Función para añadir registros con fecha y hora a la consola y al archivo de log
 log() {

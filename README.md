@@ -7,15 +7,15 @@
 ![Docker](https://img.shields.io/docker/image-size/sertemo/mlhomeserver?color=blue&logo=docker)
 
 ## Descripción
-Pequeño proyecto para montar un servidor en el ordenador Samsung del 2011 con **Xubuntu**.
+Pequeño proyecto para montar un servidor linux en casa.
 
 La idea es poder utilizarlo como API para hacer predicciones con modelos de ML y devolver dichas predicciones.
 
 Este proyecto ofrece además la posibilidad de entrenar modelos.
 
-En un futuro próximo se montará el servidor en un mini PC **Beelink Mini S12 Pro Mini PC** en el que se instalará **Ubuntu 24.04 live server**.
+El servidor se ha montado en un **Beelink Mini S12 Pro** en el que se ha instalado **Ubuntu 24.04 live server**.
 
-## Entrenar un modelo localmente
+## Entrenar un modelo nuevo
 ### 1. Configurar el archivo de desafíos config.yml dentro de la raiz del proyecto
 Antes de entrenar un modelo hay que definir el desafío y los parámetros necesarios para el entrenamiento.
 
@@ -434,7 +434,8 @@ $ ./start.sh
 ```
 
 ## Uso de la API
-Para hacer request de momento funcionan los siguientes endpoints:
+### GET http://trymlmodels.com_5000/docs
+Acceso a la documentación
 
 ### GET http://trymlmodels.com:5000 > mensaje bienvenida
 

@@ -1,8 +1,10 @@
 #!/bin/bash
-# Última actualización 15/05/2024
+
+# Configuración
 IMAGE_NAME="sertemo/mlhomeserver:latest"
 CONTAINER_NAME="friendly_black"
-VOLUME_NAME="model-data"
+VOLUME_MODEL="model-data"
+VOLUME_LOGS="logs"
 LOG_FILE="/home/sertemo/Python/MLHomeServer/dockerlog.log"
 
 # Función para añadir registros con fecha y hora a la consola y al archivo de log
@@ -30,7 +32,10 @@ if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
         docker rm $CONTAINER_NAME | tee -a $LOG_FILE 2>&1
 
         # Correr el nuevo contenedor con la nueva imagen
-        docker run -d -p 5000:5000 --name $CONTAINER_NAME -v $VOLUME_NAME:/app/models $IMAGE_NAME | tee -a $LOG_FILE 2>&1
+        docker run -d -p 5000:5000 --name $CONTAINER_NAME \
+          -v $VOLUME_MODEL:/app/models \
+          -v $VOLUME_LOGS:/app/logs \
+          $IMAGE_NAME | tee -a $LOG_FILE 2>&1
 
         log "Contenedor actualizado exitosamente."
     else
@@ -38,7 +43,10 @@ if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
     fi
 else
     # Correr el nuevo contenedor por primera vez si no está corriendo
-    docker run -d -p 5000:5000 --name $CONTAINER_NAME -v $VOLUME_NAME:/app/models $IMAGE_NAME | tee -a $LOG_FILE 2>&1
+    docker run -d -p 5000:5000 --name $CONTAINER_NAME \
+      -v $VOLUME_MODEL:/app/models \
+      -v $VOLUME_LOGS:/app/logs \
+      $IMAGE_NAME | tee -a $LOG_FILE 2>&1
     log "Contenedor creado por primera vez."
 fi
 

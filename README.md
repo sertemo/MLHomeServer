@@ -235,7 +235,7 @@ Para actualizar los cambios en el contenedor Docker del servidor se preparará u
 1. Pull al repo de DockerHun donde está la imagen.
 2. Comparar la ID de la iamgen descargada con la imagen del contenedor en ejecución.
 3. Si la imagen es distinta se parará el contenedor.
-4. Se creará un contenedor nuevo.
+4. Se creará un contenedor nuevo con política de reinicio automático excepto si se para manualmente.
 5. Limpia las imágenes no utilizadas desde hace 24 h.
 
 El script captura la salida de cada ejecución y la recoge en el archivo `logfile.log` guardado en la misma carpeta que `update_docker.sh`.
@@ -276,7 +276,7 @@ if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
         docker rm $CONTAINER_NAME | tee -a $LOG_FILE 2>&1
 
         # Correr el nuevo contenedor con la nueva imagen
-        docker run -d -p 5000:5000 --name $CONTAINER_NAME \
+        docker run --restart unless-stopped -d -p 5000:5000 --name $CONTAINER_NAME \
           -v $VOLUME_MODEL:/app/models \
           -v $VOLUME_LOGS:/app/logs \
           $IMAGE_NAME | tee -a $LOG_FILE 2>&1
@@ -287,7 +287,7 @@ if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
     fi
 else
     # Correr el nuevo contenedor por primera vez si no está corriendo
-    docker run -d -p 5000:5000 --name $CONTAINER_NAME \
+    docker run --restart unless-stopped -d -p 5000:5000 --name $CONTAINER_NAME \
       -v $VOLUME_MODEL:/app/models \
       -v $VOLUME_LOGS:/app/logs \
       $IMAGE_NAME | tee -a $LOG_FILE 2>&1

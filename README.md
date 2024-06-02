@@ -434,7 +434,7 @@ $ ./start.sh
 ```
 
 ## Uso de la API
-### GET http://trymlmodels.com_5000/docs
+### GET http://trymlmodels.com:5000/docs
 Acceso a la documentación
 
 ### GET http://trymlmodels.com:5000 > mensaje bienvenida

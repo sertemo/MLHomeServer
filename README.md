@@ -521,6 +521,9 @@ Formato de la respuesta:
 - 0.1.2 : Se agrega el tiempo de respuesta en segundos al endpoint de predicciones.
 - 0.1.3 : Se añade logging a la API
 
+## Posibles Mejoras
+- Cambiar de operador de internet para permitir redireccionamiento o apertura del puerto 80
+
 ## Agradecimientos
 Special thanks to [**Miguel Zubiaga**](https://www.mzubiaga.net/) por ayudarme a montar este mini proyecto.
 

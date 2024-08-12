@@ -62,6 +62,7 @@ class Training:
             logger.info(f"Entrenamiento de {nombre_desafio} realizado correctamente.")
         except Exception as e:
             logger.error(f"Se ha producido un error al entrenar: {e}")
+            print(e)
             return
 
 

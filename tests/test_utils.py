@@ -29,4 +29,4 @@ def test_get_project_version_file_not_found():
             get_project_version()
 
 def test_get_current_competitions_correct():
-    assert get_current_competitions_from_yml() == ['aidtec']
+    assert get_current_competitions_from_yml() == ['aidtec', 'efficiency']

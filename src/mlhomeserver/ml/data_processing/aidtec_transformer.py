@@ -62,7 +62,7 @@ class WineDatasetTransformer(TransformerMixin, BaseEstimator):
         self.sc = StandardScaler()
         self.oh_encoder = OneHotEncoder(drop="if_binary", sparse_output=False)
         self.log_transformation_list = log_transformation
-        self.drop_columns_list = drop_columns
+        self.drop_columns = drop_columns
         self.shuffle = shuffle
 
     def _filtrar_alcohol_malos(self, feature: pd.Series) -> pd.Series:
@@ -171,8 +171,8 @@ class WineDatasetTransformer(TransformerMixin, BaseEstimator):
                     raise WrongColumnName(f"La columna {col} no es correcta")
 
         # Validacion drops
-        if self.drop_columns_list is not None:
-            for col in self.drop_columns_list:
+        if self.drop_columns is not None:
+            for col in self.drop_columns:
                 if col not in X:
                     raise WrongColumnName(f"La columna {col} no es correcta")
 
@@ -246,12 +246,12 @@ class WineDatasetTransformer(TransformerMixin, BaseEstimator):
             for col in self.log_transformation_list:
                 X_[col] = X_[col].apply(np.log)
 
-        if self.drop_columns_list is not None:
-            X_ = X_.drop(columns=self.drop_columns_list)
+        if self.drop_columns is not None:
+            X_ = X_.drop(columns=self.drop_columns)
 
         if self.shuffle:
             X_ = X_.sample(len(X_), random_state=42)
-
+            self.y_index = X_.index
         return X_
 
     def get_feature_names_out(self, names=None):

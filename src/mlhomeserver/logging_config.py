@@ -22,9 +22,15 @@ LOGGING_CONFIG = {
             "filename": LOG_PATH,
             "maxBytes": 100_000,
             "backupCount": 3,
-        }
+        },
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "INFO",
+            "formatter": "simple",
+            "stream": "ext://sys.stdout",
+        },
     },
-    "loggers": {"root": {"level": "INFO", "handlers": ["file"]}},
+    "loggers": {"root": {"level": "INFO", "handlers": ["file", "console"]}},
 }
 
 # Instanciamos el logger

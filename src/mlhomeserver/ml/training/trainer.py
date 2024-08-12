@@ -58,7 +58,15 @@ class Trainer:
         self.label_encoder = label_encoder
         self.index_col = train_dataset_index_col
 
-    def _preprocess(self) -> pd.DataFrame:
+    def __repr__(self) -> str:
+        return f"""{self.__class__.__name__}(nombre={self.nombre},
+        label_col_name={self.label_col_name}, preprocesador={self.preprocesador},
+        modelo={self.modelo}, label_encoder={self.label_encoder},
+        train_dataset_index_col={self.index_col},
+        label_encoder={self.label_encoder},
+        dataset_columns={self.train_dataset.columns})"""
+
+    def _preprocess(self, X: pd.DataFrame, y: pd.DataFrame) -> pd.DataFrame:
         """Ejecuta el preprocesamiento
 
         Returns
@@ -66,10 +74,11 @@ class Trainer:
         pd.DataFrame
             _description_
         """
-        df_preprocessed: pd.DataFrame = self.preprocesador.fit_transform(
-            self.train_dataset
-        )
-        return df_preprocessed
+        try:
+            X_preprocessed = self.preprocesador.fit_transform(X, y)
+        except Exception as e:
+            raise PreProcessorError(e)
+        return X_preprocessed
 
     def _save_model_metadata(
         self, modelo_desafio_folder: Path, modelo: SerializableClassifier
@@ -95,15 +104,21 @@ class Trainer:
         y el label encoder en caso de haberlo"""
         start = time.perf_counter()
 
+        # Separamos X_train y_train
+        X_train = self.train_dataset.drop(columns=[self.label_col_name])
+        y_train = self.train_dataset[self.label_col_name]
+
         # Preprocesamos
         try:
-            df_preprocessed: pd.DataFrame = self._preprocess()
+            X_train = self._preprocess(X_train, y_train)
+            # Verificamos si ha habido cambio de índices
+            if hasattr(self.preprocesador, "y_index"):
+                y_train = y_train.reindex(self.preprocesador.y_index)
+                print("Despues de reindexar:")
+                print(y_train.index)
         except Exception as e:
             raise PreProcessorError(f"Se ha producido un error al preprocesar: {e}")
 
-        # Separamos X_train y_train
-        X_train = df_preprocessed.drop(columns=[self.label_col_name])
-        y_train = df_preprocessed[self.label_col_name]
         if self.label_encoder:
             label_encoder = LabelEncoder()
             label_encoder = SerializableTransformer(label_encoder)

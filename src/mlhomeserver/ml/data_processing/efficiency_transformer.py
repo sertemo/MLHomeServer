@@ -17,8 +17,10 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, FunctionTransformer
 
+
 def drop_correlated(X: pd.DataFrame) -> pd.DataFrame:
     return X.drop(columns=["X2", "X4", "X5"])
+
 
 class EfficiencyTransformer(BaseEstimator, TransformerMixin):
     """Transformador que envuelve a la pipeline
@@ -31,6 +33,7 @@ class EfficiencyTransformer(BaseEstimator, TransformerMixin):
     TransformerMixin : _type_
         _description_
     """
+
     def __init__(self):
         self.save = True  # Para guardar el preprocesador fiteado
         self.pipeline = Pipeline(

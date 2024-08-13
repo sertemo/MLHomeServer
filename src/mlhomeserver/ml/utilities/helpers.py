@@ -21,7 +21,10 @@ from typing import Any
 
 import pickle
 
-from mlhomeserver.ml.utilities.wrappers import SerializableClassifier, SerializableTransformer
+from mlhomeserver.ml.utilities.wrappers import (
+    SerializableClassifier,
+    SerializableTransformer,
+)
 import mlhomeserver.settings as settings
 
 

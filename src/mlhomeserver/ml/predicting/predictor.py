@@ -19,7 +19,6 @@ from pathlib import Path
 import numpy as np
 from numpy.typing import NDArray
 import pandas as pd
-from sklearn.base import BaseEstimator
 
 from mlhomeserver.ml.utilities.wrappers import (
     SerializableClassifier,
@@ -60,14 +59,12 @@ class Predictor:
         try:
             # Si existe el preprocesador serializado, lo aplicamos
             if (settings.PREPROCESSORS_FOLDER / Path(self._nombre_modelo)).exists():
-                self.preprocesador: BaseEstimator = load_preprocessor(self._nombre_modelo)
+                self.preprocesador = load_preprocessor(self._nombre_modelo)
                 df_preprocessed: pd.DataFrame = self.preprocesador.transform(
                     self.dataset
                 )
             else:
-                df_preprocessed: pd.DataFrame = self.preprocesador.fit_transform(
-                    self.dataset
-                )
+                df_preprocessed = self.preprocesador.fit_transform(self.dataset)
         except Exception as e:
             raise PreProcessorError(f"Se ha producido un error al preprocesar: {e}")
 

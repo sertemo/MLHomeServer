@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Funciones auxiliares para el ML"""
+"""Funciones auxiliares para el ML de los desafíos"""
 
 from functools import lru_cache
 import json

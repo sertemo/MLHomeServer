@@ -108,14 +108,17 @@ class Trainer:
         X_train = self.train_dataset.drop(columns=[self.label_col_name])
         y_train = self.train_dataset[self.label_col_name]
 
+        # Metemos un shuffle
+        X_train = X_train.sample(frac=1, random_state=42).reset_index(drop=True)
+        y_train = y_train.sample(frac=1, random_state=42).reset_index(drop=True)
+
         # Preprocesamos
         try:
             X_train = self._preprocess(X_train, y_train)
-            # Verificamos si ha habido cambio de índices
+            # Verificamos si ha habido cambio de índices en el preprocesamiento
             if hasattr(self.preprocesador, "y_index"):
                 y_train = y_train.reindex(self.preprocesador.y_index)
-                print("Despues de reindexar:")
-                print(y_train.index)
+                print("Se ha reindexado y_train")
         except Exception as e:
             raise PreProcessorError(f"Se ha producido un error al preprocesar: {e}")
 

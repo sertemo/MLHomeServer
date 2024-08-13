@@ -47,17 +47,17 @@ jobs:
           script: |
             # Detener y eliminar el contenedor si ya está corriendo
             if docker ps -a --format '{{.Names}}' | grep -q "^mlhomeserver$"; then
-              docker stop mlhomeserver
-              docker rm mlhomeserver
+              docker stop mlhomeserver_container
+              docker rm mlhomeserver_container
             fi
 
             # Descargar la última imagen
             docker pull sertemo/mlhomeserver:latest
 
             # Crear y ejecutar el nuevo contenedor
-            docker run --restart unless-stopped -d -p 5000:5000 --name mlhomeserver \
-              -v /path/to/models:/app/models \
-              -v /path/to/logs:/app/logs \
+            docker run --restart unless-stopped -d -p 5000:5000 --name mlhomeserver_container \
+              -v model-data:/app/models \
+              -v logs:/app/logs \
               sertemo/mlhomeserver:latest
 
             # Limpieza de imágenes no utilizadas

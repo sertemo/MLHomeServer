@@ -19,6 +19,16 @@ from sklearn.preprocessing import StandardScaler, FunctionTransformer
 
 
 class EfficiencyTransformer(BaseEstimator, TransformerMixin):
+    """Transformador que envuelve a la pipeline
+    de procesamiento del desafio Efficiency
+
+    Parameters
+    ----------
+    BaseEstimator : _type_
+        _description_
+    TransformerMixin : _type_
+        _description_
+    """
     def __init__(self):
         self.efficiency_preprocessor = Pipeline(
             steps=[

@@ -23,13 +23,14 @@ aidtec:
 
 efficiency:
   dataset:
-    filename: "train.csv"  # Dentro de data/efficiency en este caso
+    filename: "train.csv"  # Dentro de data/efficiency
     label_col_name: "target"
   preprocessor:
-    class_name: "EfficiencyTransformer"  # Dentro de data_processing/efficiency_transformer.py en este caso
+    class_name: "EfficiencyTransformer"  # Dentro de data_processing/efficiency_transformer.py
   model:
     type: "sklearn.ensemble"  # poner el módulo en el que se encuentra el modelo
     class_name: "RandomForestClassifier"
     params:
       random_state: 42
+      max_depth: 10
   label_encoder: false

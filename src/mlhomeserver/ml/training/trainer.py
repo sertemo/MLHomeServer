@@ -163,7 +163,7 @@ class Trainer:
             preprocessor_desafio_folder = settings.PREPROCESSORS_FOLDER / Path(
                 self.nombre
             )
-            preprocessor_desafio_folder.mkdir(exist_ok=True)
+            preprocessor_desafio_folder.mkdir(exist_ok=True, parents=True)
             self.preprocesador.save(
                 preprocessor_desafio_folder
                 / (self.nombre + "_" + settings.PREPROCESSOR_SUFFIX_NAME)

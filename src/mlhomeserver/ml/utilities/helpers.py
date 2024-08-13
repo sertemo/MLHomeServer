@@ -21,7 +21,7 @@ from typing import Any
 
 import pickle
 
-from mlhomeserver.ml.utilities.wrappers import SerializableClassifier
+from mlhomeserver.ml.utilities.wrappers import SerializableClassifier, SerializableTransformer
 import mlhomeserver.settings as settings
 
 
@@ -43,6 +43,29 @@ def deserialize(filename: str) -> Any:
     with open(filename, "rb") as f:
         obj = pickle.load(f)
     return obj
+
+
+def _make_preprocessor_path(nombre_desafio: str) -> Path:
+    """Devuelve la ruta del preprocesador
+
+    Parameters
+    ----------
+    nombre_desafio : str
+        _description_
+
+    Returns
+    -------
+    Path
+        _description_
+    """
+    nombre_preprocesador = "".join(
+        [nombre_desafio, "_", settings.PREPROCESSOR_SUFFIX_NAME]
+    )
+    ruta_preprocesador: Path = (
+        settings.PREPROCESSORS_FOLDER / Path(nombre_desafio) / nombre_preprocesador
+    )
+
+    return ruta_preprocesador
 
 
 def _make_model_path(nombre_desafio: str) -> Path:
@@ -75,6 +98,18 @@ def load_model(nombre_desafio: str) -> SerializableClassifier:
     ruta_modelo: Path = _make_model_path(nombre_desafio)
     modelo: SerializableClassifier = SerializableClassifier.load(ruta_modelo)
     return modelo
+
+
+@lru_cache(maxsize=500)
+def load_preprocessor(nombre_desafio: str) -> SerializableTransformer:
+    """Carga un preprocesador serializado de la carpeta
+    correspondiente al desafío"""
+
+    ruta_preprocesador: Path = _make_preprocessor_path(nombre_desafio)
+    preprocesador: SerializableTransformer = SerializableTransformer.load(
+        ruta_preprocesador
+    )
+    return preprocesador
 
 
 def _make_metadata_path(nombre_desafio: str) -> Path:

@@ -14,18 +14,19 @@
 
 """Módulo que recoge la clase Predictor general"""
 
-import numpy as np
-from numpy.typing import NDArray
 from pathlib import Path
 
+import numpy as np
+from numpy.typing import NDArray
 import pandas as pd
+from sklearn.base import BaseEstimator
 
 from mlhomeserver.ml.utilities.wrappers import (
     SerializableClassifier,
     SerializableTransformer,
 )
 from mlhomeserver.exceptions import PreProcessorError, MissingCompetitionFolderError
-from mlhomeserver.ml.utilities.helpers import load_model
+from mlhomeserver.ml.utilities.helpers import load_model, load_preprocessor
 import mlhomeserver.settings as settings
 from mlhomeserver.parser import DataParser
 
@@ -57,14 +58,24 @@ class Predictor:
 
         # Preprocesamos
         try:
-            df_preprocessed: pd.DataFrame = self.preprocesador.fit_transform(
-                self.dataset
-            )
+            # Si existe el preprocesador serializado, lo aplicamos
+            if (settings.PREPROCESSORS_FOLDER / Path(self._nombre_modelo)).exists():
+                self.preprocesador: BaseEstimator = load_preprocessor(self._nombre_modelo)
+                df_preprocessed: pd.DataFrame = self.preprocesador.transform(
+                    self.dataset
+                )
+            else:
+                df_preprocessed: pd.DataFrame = self.preprocesador.fit_transform(
+                    self.dataset
+                )
         except Exception as e:
             raise PreProcessorError(f"Se ha producido un error al preprocesar: {e}")
 
         # Quitamos la columna de los labels
-        X_test = df_preprocessed.drop(columns=[self.label_col_name])
+        if self.label_col_name in df_preprocessed.columns:
+            X_test = df_preprocessed.drop(columns=[self.label_col_name])
+        else:
+            X_test = df_preprocessed
 
         # Verificamos que exista carpeta del desafío
         self.carpeta_modelo = settings.MODELS_FOLDER / Path(self.nombre)

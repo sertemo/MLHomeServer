@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, FunctionTransformer
 
+def drop_correlated(X: pd.DataFrame) -> pd.DataFrame:
+    return X.drop(columns=["X2", "X4", "X5"])
 
 class EfficiencyTransformer(BaseEstimator, TransformerMixin):
     """Transformador que envuelve a la pipeline
@@ -30,11 +32,12 @@ class EfficiencyTransformer(BaseEstimator, TransformerMixin):
         _description_
     """
     def __init__(self):
-        self.efficiency_preprocessor = Pipeline(
+        self.save = True  # Para guardar el preprocesador fiteado
+        self.pipeline = Pipeline(
             steps=[
                 (
                     "drop_correlated",
-                    FunctionTransformer(lambda X: X.drop(columns=["X2", "X4", "X5"])),
+                    FunctionTransformer(drop_correlated),
                 ),
                 ("scaler", StandardScaler()),
             ]
@@ -42,9 +45,9 @@ class EfficiencyTransformer(BaseEstimator, TransformerMixin):
 
     def fit(self, X, y=None):
         print("fit")
-        self.efficiency_preprocessor.fit(X, y)
+        self.pipeline.fit(X, y)
         return self
 
     def transform(self, X):
         print("transform")
-        return self.efficiency_preprocessor.transform(X)
+        return self.pipeline.transform(X)

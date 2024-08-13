@@ -19,7 +19,9 @@ from pathlib import Path
 # Esto asumirá que DATA_PATH debe ser un directorio relativo al directorio del proyecto
 DATA_PATH = Path("data")
 MODELS_FOLDER = Path("models")
+PREPROCESSORS_FOLDER = Path("preprocessors")
 MODEL_SUFFIX_NAME = "model.joblib"
+PREPROCESSOR_SUFFIX_NAME = "preprocessor.joblib"
 LABEL_ENCODER_SUFFIX_NAME = "labelencoder.joblib"
 MODEL_METADATA_SUFIX = "model_metadata.json"
 

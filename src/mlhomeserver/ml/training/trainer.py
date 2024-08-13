@@ -156,6 +156,20 @@ class Trainer:
         self.modelo = SerializableClassifier(self.modelo)
         self.modelo.fit(X_train, y_train)
 
+        # Guardamos el preprocesor si tiene el argumento 'save'
+        if hasattr(self.preprocesador, "save"):
+            print("Guardando el preprocesador ...")
+            self.preprocesador = SerializableTransformer(self.preprocesador)
+            preprocessor_desafio_folder = settings.PREPROCESSORS_FOLDER / Path(
+                self.nombre
+            )
+            preprocessor_desafio_folder.mkdir(exist_ok=True)
+            self.preprocesador.save(
+                preprocessor_desafio_folder
+                / (self.nombre + "_" + settings.PREPROCESSOR_SUFFIX_NAME)
+            )
+            print("Preprocesador guardado")
+
         # Guardamos el modelo y label encoder en caso de haber
         # Creamos el folder por si no existe
         modelo_desafio_folder = settings.MODELS_FOLDER / Path(self.nombre)

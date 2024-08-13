@@ -58,7 +58,7 @@ jobs:
             docker run --restart unless-stopped -d -p 5000:5000 --name mlhomeserver_container \
               -v models:/app/models \
               -v logs:/app/logs \
-              - v preprocessors:/app/preprocessors \
+              -v preprocessors:/app/preprocessors \
               sertemo/mlhomeserver:latest
 
             # Limpieza de imágenes no utilizadas

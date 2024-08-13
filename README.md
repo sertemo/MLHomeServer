@@ -486,7 +486,7 @@ Formato de la respuesta:
 }
 ```
 
-### GET http://trymlmodels.com/nombre_desafio/model > devuelve info del modelo
+### GET http://trymlmodels.com/model/nombre_desafio > devuelve info del modelo
 Formato de la respuesta:
 
 ```sh

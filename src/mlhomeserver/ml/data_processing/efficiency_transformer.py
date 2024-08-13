@@ -17,21 +17,15 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import RFE
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, FunctionTransformer
 
 
 class EfficiencyTransformer(BaseEstimator, TransformerMixin):
     def __init__(self):
         self.efficiency_preprocessor = Pipeline(
             steps=[
+                ('drop_correlated', FunctionTransformer(lambda X: X.drop(columns=['X2', 'X4', 'X5']))),
                 ("scaler", StandardScaler()),
-                (
-                    "rfe",
-                    RFE(
-                        estimator=RandomForestClassifier(random_state=42),
-                        n_features_to_select=5,
-                    ),
-                ),
             ]
         )
 

@@ -338,7 +338,10 @@ En **Acces Control** > **Port Forwarding** se añade 1 regla manual:
 - Internal host con la IP privada de ethernet de mi ordenador Beelink y 5000 como external e internal port
 
 ### UPDATE 25/07/2024
-Se ha realizado la mudanza física del servidor a otro domicilio con otro proveedor de internet: **O2**. El router de este proveedor permite redireccionar los puertos 80 y 443 por lo que la nueva url de este proyecto será: **http://trymlmodels.com**. Se redirecciona el puerto **80** externo al puerto **5000** interno.
+- Se ha realizado la mudanza física del servidor a otro domicilio con otro proveedor de internet: **O2**. El router de este proveedor permite redireccionar los puertos 80 y 443 por lo que la nueva url de este proyecto será: **http://trymlmodels.com**. Se redirecciona el puerto **80** externo al puerto **5000** interno.
+
+### UPDATE 10/09/2024
+Se migra el contenedor de la app de mi servidor casero a un Cloud Run en GCP. La nueva URL de la aplicación es: **http://mlhomeserver.trymlmodels.com**
 
 ### 4. Dominio
 Con los pasos anterior ya se podría poner en marcha el servidor. Las solicitudes a la <ip_publica>:5000 deberían tener respuesta.
@@ -436,12 +439,12 @@ $ ./start.sh
 ```
 
 ## Uso de la API
-### GET http://trymlmodels.com/docs
+### GET http://mlhomeserver.trymlmodels.com/docs
 Acceso a la documentación
 
-### GET http://trymlmodels.com > mensaje bienvenida
+### GET http://mlhomeserver.trymlmodels.com > mensaje bienvenida
 
-### GET http://trymlmodels.com/about > Información del servidor
+### GET http://mlhomeserver.trymlmodels.com/about > Información del servidor
 Formato de respuesta:
 
 ```sh
@@ -468,7 +471,7 @@ Formato de respuesta:
 }
 ```
 
-### POST con un csv http://trymlmodels.com/predict/nombre_desafio > devuelve las predicciones
+### POST con un csv http://mlhomeserver.trymlmodels.com/predict/nombre_desafio > devuelve las predicciones
 Formato de la respuesta:
 
 ```sh
@@ -486,7 +489,7 @@ Formato de la respuesta:
 }
 ```
 
-### GET http://trymlmodels.com/model/nombre_desafio > devuelve info del modelo
+### GET http://mlhomeserver.trymlmodels.com/model/nombre_desafio > devuelve info del modelo
 Formato de la respuesta:
 
 ```sh
